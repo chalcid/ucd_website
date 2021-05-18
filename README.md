@@ -4,7 +4,8 @@ Chalcidoidea (jewel wasps) are among the most species rich, ecologically importa
 
 The TW Universal Chalcidoidea Database currently contains original citations for all 31,000 taxonomic names made available within the Chalcidoidea. It also includes a comprehensive list of the various generic combinations and misspellings that have been used in the literature. Nearly 50,000 different combinations and spellings are recorded. All names are supported by a citation of the published source from where they were obtained as are all taxonomic and nomenclatural acts noted within the database. Also included are over 120,000 host/associate records (including associations with food plants of the hosts) and more than 140,000 distribution records.  See a brief overview of the live stats [here](https://stats.taxonworks.org/?server=sfg.taxonworks.org&project_token=adhBi59dc13U7RxbgNE5HQ).
 
-<img src="https://sfg.taxonworks.org/s/84kzbo" width="100%"/>
+<img src="https://sfg.taxonworks.org/s/872ok8" width="100%"/>
+
 
 
 Origin of the data: Noyes, J.S. 2019. [Universal Chalcidoidea Database. World Wide Web electronic publication.](http://www.nhm.ac.uk/chalcidoids)

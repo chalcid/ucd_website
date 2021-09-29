@@ -15,7 +15,7 @@ _TODO_
 # Accessing
 * In Taxonworks: Contact one of the curators: Jim Woolley, John Heraty, Roger Burks. 
 * _Data will be accessible here, sooner or later._
-* Data can be queried via requests to the [API](https://sfg.taxonworks.org/api/v1/), see [https::/api.taxonworks.org](https::/api.taxonworks.org) for instructions.
+* Data can be queried via requests to the [API](https://sfg.taxonworks.org/api/v1/), see [https::/api.taxonworks.org](https://api.taxonworks.org) for instructions.
 
 # About
 This is a Github pages website with source at [here](https://github.com/chalcid).

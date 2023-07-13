@@ -1,0 +1,68 @@
+#app {
+  font-weight: normal;
+  padding-left: 1em;
+  padding-right: 2px;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+}
+
+.indent {
+  margin-left: calc(var(--bs-gutter-x));
+}
+
+.italicizeBreadcrumb {
+  font-style: italic;
+}
+
+.dropdown input:focus + .dropdown-menu {
+  display: block;
+}
+
+.dropdown {
+  position: relative;
+}
+
+#results-list-span {
+  padding-left: 3em;
+  text-indent: -1em;
+  padding-right: 1em;
+}
+
+.nav-link.router-link-active {
+  background-color: #ccc;
+  color: #000;
+}
+
+#outline-button {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.ul-home-page {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.ul-home-page li {
+  padding-left: 20px;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: hsla(160, 100%, 37%, 0.2);
+  }
+}
+
+@media (max-width: 720px) {
+  #app {
+    padding-left: 5px;
+    padding-right: 2px;
+  }
+}

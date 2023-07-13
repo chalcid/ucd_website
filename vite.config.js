@@ -12,7 +12,7 @@ export default defineConfig({
             '@': path.resolve(__dirname, 'src')
         }
     },
-    base: '/ucd_website/',
+    base: '/',
     build: {
         outDir: 'docs'
     }

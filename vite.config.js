@@ -11,5 +11,9 @@ export default defineConfig({
         alias: {
             '@': path.resolve(__dirname, 'src')
         }
+    },
+    base: '/ucd_website/',
+    build: {
+        outDir: 'docs'
     }
 })

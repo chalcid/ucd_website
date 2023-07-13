@@ -2,17 +2,6 @@
 
 This is the official project for making a public-facing page for the new Universal Chalcidoidea Database, using [Taxonworks](http://taxonworks.org/) to host and manage the data. The front end is created with Vue.js with Vite and Bootstrap.
 
-**Setup**:
-1. Have Node.js installed
-2. Have Vue.js 3 installed
-3. Have Vite installed
-4. Make an `.env` file using Vite syntax for the API calls. The contents should look like what is below. These statements cannot contain spaces or any punctuation aside from `=` and `_`.
-   
-   `VITE_APP_API_TOKEN=`[your api token for the Universal Chalcidoidea Database in Taxonworks]
-   `VITE_APP_PROJECT_TOKEN=`[project token for the Universal Chalcidoidea Database in Taxonworks]
-
-5. The `.env` file should go in the root directory of the project, same location as `vite.config.js`.
-
 **What stage are we at?**
 I regard this as beta build. 
 

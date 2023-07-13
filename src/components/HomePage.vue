@@ -42,9 +42,11 @@
       <li>James B. Woolley, Texas A&M University, College Station, TX, USA</li>
     </ul>
     
-    <strong>TaxonWorks Development and Outreach Team</strong>: Matt Yoder, Dmitry Dmitriev, José Luis Pereira, Hernán Lucas Pereira, Deborah Paul.
+    <p><strong>TaxonWorks Development and Outreach Team</strong>: Matt Yoder, Dmitry Dmitriev, José Luis Pereira, Hernán Lucas Pereira, Deborah Paul.</p>
 
     <p><strong>UCD content</strong> is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution License</a>.</p>
+    
+    <p><strong>Funding</strong> by the Tate &amp; Lyle PLC, Unilever, National Science Foundation Grant DEB-1555808, and a grant from USDA Systematic Entomology Laboratory.</p>
   </div>
 </template>
 

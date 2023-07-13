@@ -22,7 +22,7 @@
     
     <p><strong>Citation for database</strong>: Universal Chalcidoidea Database Curators. 2022. Universal Chalcidoidea Database (UCD) curated in TaxonWorks. https://sfg.taxonworks.org/api/v1/. Accessed on [date].</p>
     
-    <p><strong>Why two citations?</strong> The UCDW is the public interface providing direct access to the curated data in the UCD Taxonworks interface. The UCD Taxonworks interface provides direct access to all of the data through a password protected interface. To get an overview of how the taxonworks interface works, we direct you to a series of video workshops starting with "1 TaxonWorks - The User Interface" (https://www.youtube.com/watch?v=SlaEhyLHkwk).</p>
+    <p><strong>Why two citations?</strong> The UCDW is the public interface providing direct access to the curated data in the UCD Taxonworks interface. The UCD Taxonworks interface provides direct access to all of the data through a password protected interface. To get an overview of how the taxonworks interface works, we direct you to a series of video workshops starting with "1 TaxonWorks - The User Interface" (<a href="https://www.youtube.com/watch?v=SlaEhyLHkwk">https://www.youtube.com/watch?v=SlaEhyLHkwk</a>).</p>
     
     <p><strong>History of the database:</strong> The Universal Chalcidoidea Database (UCD) contains original citations for all 31,000  taxonomic names made available within the Chalcidoidea. It also includes a comprehensive list of the various generic combinations and misspellings that have been used in the literature. In all nearly 50,000 different combinations and spellings are recorded. All names are supported by a citation of the published source from where they were obtained as are all taxonomic and nomenclatural acts noted within the database. Also included are over 120,000 host/associate records (including associations with food plants of the hosts) and more than 140,000 distribution records. The latter can be used to provide regional lists of Chalcidoidea.</p>
     
@@ -31,7 +31,7 @@
     <p><strong>Curators</strong>: John Noyes was responsible for the enormous task of developing and curating the UCD up to 2019. For this we have only great admiration and thanks. A new curatorial group are now responsible for updating the database post 2019. To be added as a curator of taxonomic or biological data, please contact:</p>
     
     <ul class="ul-home-page"><strong>List of Active Curators</strong>:
-      <li class="li-home-page">Roger Burks (site designer) Newport Beach, CA, USA, burks.roger[at]gmail.com</li>
+      <li>Roger Burks (site designer) Newport Beach, CA, USA, burks.roger[at]gmail.com</li>
       <li>Lucian Fusu, 'Al. I. Cuza' University, Iasi, Romania</li>
       <li>D. Christopher Darling, Royal Ontario Museum, Toronto, ON, Canada</li>
       <li>John Heraty, University of California, Riverside, CA, USA</li>

@@ -41,6 +41,8 @@
       <li>Natalie Dale-Skey, The Museum of Natural History, London, United Kingdom</li>
       <li>James B. Woolley, Texas A&M University, College Station, TX, USA</li>
     </ul>
+    
+    <strong>TaxonWorks Development and Outreach Team</strong>: Matt Yoder, Dmitry Dmitriev, José Luis Pereira, Hernán Lucas Pereira, Deborah Paul.
 
     <p><strong>UCD content</strong> is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution License</a>.</p>
   </div>

@@ -45,6 +45,15 @@ a,
   padding-right: 10px;
 }
 
+.ul-home-page {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.ul-home-page li {
+  padding-left: 20px;
+}
+
 @media (hover: hover) {
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);

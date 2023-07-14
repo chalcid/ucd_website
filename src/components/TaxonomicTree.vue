@@ -2,57 +2,73 @@
   <ul>
     <li><i>Note: be prepared to wait a few seconds if you choose a taxon with many descendants.</i></li>
     <li id="superfamily"><b><a>Chalcidoidea</a></b></li>
-    <li v-for="taxon in (trList[0] && trList[0].children ? trList[0].children : [])" :key="taxon.id">
-      <button @click="toggleTaxon(taxon)" id="treeButton">
-        <span v-show="openTaxa[taxon.id] === true">-</span>
-        <span v-show="!openTaxa[taxon.id] === true">+</span>
+    <li v-for="firstDown in (trList[0] && trList[0].children ? trList[0].children : [])" :key="firstDown.id">
+      <button @click="toggleTaxon(firstDown)" id="treeButton">
+        <span v-show="openTaxa[firstDown.id] === true">-</span>
+        <span v-show="!openTaxa[firstDown.id] === true">+</span>
       </button>
       <a @click="displayTaxonPage(taxon.id)" id="higherTaxon">
-        <span v-if="taxon.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || taxon.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'">
-          <i>{{ taxon.name }}</i>
+        <span v-if="firstDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || firstDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'">
+          <i>{{ firstDown.name }}</i>
         </span>
         <span v-else>
-          {{ taxon.name }}
+          {{ firstDown.name }}
         </span>
       </a>
-      <ul v-show="openTaxa[taxon.id] === true && taxon.children">
-        <li v-for="subfamily in taxon.children" :key="subfamily.id">
-          <button v-show="subfamily.rank_string!='NomenclaturalRank::Iczn::SpeciesGroup::Species'" @click="toggleTaxon(subfamily)" id="treeButton">
-            <span v-show="openTaxa[subfamily.id] === true">-</span>
-            <span v-show="!openTaxa[subfamily.id] === true">+</span>
+      <ul v-show="openTaxa[firstDown.id] === true && firstDown.children">
+        <li v-for="secondDown in firstDown.children" :key="secondDown.id">
+          <button v-show="secondDown.rank_string!='NomenclaturalRank::Iczn::SpeciesGroup::Species'" @click="toggleTaxon(secondDown)" id="treeButton">
+            <span v-show="openTaxa[secondDown.id] === true">-</span>
+            <span v-show="!openTaxa[secondDown.id] === true">+</span>
           </button>
-          <a @click="displayTaxonPage(subfamily.id), nothingClicked = !nothingClicked" style="text-decoration:underline; color: var(--bs-link-color);" id="higherTaxon">
-            <span v-if="subfamily.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || subfamily.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'">
-              <i>{{ subfamily.name }}</i>
+          <a @click="displayTaxonPage(secondDown.id), nothingClicked = !nothingClicked" style="text-decoration:underline; color: var(--bs-link-color);" id="higherTaxon">
+            <span v-if="secondDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || secondDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'">
+              <i>{{ secondDown.name }}</i>
             </span>
             <span v-else>
-              {{ subfamily.name }}
+              {{ secondDown.name }}
             </span>
           </a>
-          <ul v-show="openTaxa[subfamily.id] === true && subfamily.children">
-            <li v-for="genus in subfamily.children" :key="genus.id">
-              <button v-show="genus.rank_string!='NomenclaturalRank::Iczn::SpeciesGroup::Species'" @click="toggleTaxon(genus)" id="treeButton">
-                <span v-show="openTaxa[genus.id] === true">-</span>
-                <span v-show="!openTaxa[genus.id] === true">+</span>
+          <ul v-show="openTaxa[secondDown.id] === true && secondDown.children">
+            <li v-for="thirdDown in secondDown.children" :key="thirdDown.id">
+              <button v-show="thirdDown.rank_string!='NomenclaturalRank::Iczn::SpeciesGroup::Species'" @click="toggleTaxon(thirdDown)" id="treeButton">
+                <span v-show="openTaxa[thirdDown.id] === true">-</span>
+                <span v-show="!openTaxa[thirdDown.id] === true">+</span>
               </button>
-              <a @click="displayTaxonPage(genus.id), nothingClicked = !nothingClicked" style="text-decoration:underline; color: var(--bs-link-color);" id="higherTaxon">
-                <span v-if="genus.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || genus.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'">
-                  <i> {{ genus.name }} </i>
+              <a @click="displayTaxonPage(thirdDown.id), nothingClicked = !nothingClicked" style="text-decoration:underline; color: var(--bs-link-color);" id="higherTaxon">
+                <span v-if="thirdDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || thirdDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'">
+                  <i> {{ thirdDown.name }} </i>
                 </span>
                 <span v-else>
-                  {{ genus.name }}
+                  {{ thirdDown.name }}
                 </span>
               </a>
-              <ul v-show="openTaxa[genus.id] === true && genus.children">
-                <li v-for="species in genus.children" :key="species.id">
-                  <a @click="displayTaxonPage(species.id), nothingClicked = !nothingClicked" id="species">
-                    <span v-if="species.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || species.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'">
-                      <i> {{ species.name }} </i>
+              <ul v-show="openTaxa[thirdDown.id] === true && thirdDown.children">
+                <li v-for="fourthDown in thirdDown.children" :key="fourthDown.id">
+                  <button v-show="fourthDown.rank_string!='NomenclaturalRank::Iczn::SpeciesGroup::Species'" @click="toggleTaxon(fourthDown)" id="treeButton">
+                    <span v-show="openTaxa[fourthDown.id] === true">-</span>
+                    <span v-show="!openTaxa[fourthDown.id] === true">+</span>
+                  </button>
+                  <a @click="displayTaxonPage(fourthDown.id), nothingClicked = !nothingClicked" id="species">
+                    <span v-if="fourthDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || fourthDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'">
+                      <i> {{ fourthDown.name }} </i>
                     </span>
                     <span v-else>
-                      {{ species.name }}
+                      {{ fourthDown.name }}
                     </span>
                   </a>
+                  <ul v-show="openTaxa[fourthDown.id] === true && fourthDown.children">
+                    <li v-for="fifthDown in fourthDown.children" :key="fifthDown.id">
+                      <a @click="displayTaxonPage(fifthDown.id), nothingClicked = !nothingClicked" id="species" style="padding-left: 20px;">
+                        <span v-if="fifthDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || fifthDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'">
+                          <i> {{ fifthDown.name }} </i>
+                        </span>
+                        <span v-else>
+                          {{ fifthDown.name }}
+                        </span>
+                      </a>
+                    </li>
+                  </ul>
                 </li>
               </ul>
             </li>

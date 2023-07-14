@@ -17,7 +17,7 @@
     <div class="col-12">
       <h3 v-if="italicized && taxonViewed[0] && taxonViewed[0].cached_is_valid===true"><i>{{ taxonViewed[0].cached }}</i> {{ taxonViewed[0].cached_author_year }}</h3>
       <h3 v-else-if="taxonViewed[0] && taxonViewed[0].cached_is_valid===true">{{ taxonViewed[0].cached }} {{ taxonViewed[0].cached_author_year }}</h3>
-      <span v-else-if="italicized && taxonViewed[0] && validified[0] && taxonViewed[0].cached_is_valid===false"><h3><i>{{ taxonViewed[0].cached }}</i> {{ taxonViewed[0].cached_author_year }}</h3><h5>Invalid name. Valid name: <router-link :to="{ name: 'TaxonPage', query: { taxonID: validified[0].id }}"><i>{{ validified[0].cached }}</i> {{ validified[0].cached_author_year }}</router-link></h5></span>
+      <span v-else-if="italicized && taxonViewed[0] && validified[0] && taxonViewed[0].cached_is_valid===false"><h3><i>{{ validified[0].cached_original_combination }}</i> {{ taxonViewed[0].cached_author_year }}</h3><h5>Invalid name. Valid name: <router-link :to="{ name: 'TaxonPage', query: { taxonID: validified[0].id }}"><i>{{ validified[0].cached }}</i> {{ validified[0].cached_author_year }}</router-link></h5></span>
       <span v-else-if="taxonViewed[0] && validified[0] && taxonViewed[0].cached_is_valid===false"><h3></h3><h5>Invalid name. Valid name: <i>{{ validified[0].cached }}</i> {{ validified[0].cached_author_year }}</h5></span>
       <span v-else></span>
     </div>
@@ -54,7 +54,7 @@
       <div v-else><img src="/spinning-circles.svg" alt="Loading..." width="75"></div>
     </div>
     
-    <div class="col-md-4" id="movingDiv" v-if="taxonViewed[0] && (taxonViewed[0].rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || taxonViewed[0].rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species')">
+    <div class="col-md-4" id="movingDiv" v-if="taxonViewed[0] && (rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species')">
       <div v-if="isTaxonIDChainPopulated"><taxon-distribution v-if="isTaxonIDChainPopulated" :ba-Prop="taxonIDChain"></taxon-distribution></div>
       <div v-else><img src="/spinning-circles.svg" alt="Loading..." width="75"></div>
     </div>
@@ -130,7 +130,7 @@ h3{
       
       const italicized = computed(() => {
         if(taxonViewed.value && taxonViewed.value[0]) {
-          return ['NomenclaturalRank::Iczn::GenusGroup::Genus', 'NomenclaturalRank::Iczn::SpeciesGroup::Species', 'NomenclaturalRank::Icn::GenusGroup::Genus', 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species'].includes(taxonViewed.value[0].rank_string);
+          return ['NomenclaturalRank::Iczn::GenusGroup::Genus', 'NomenclaturalRank::Iczn::GenusGroup::Subgenus', 'NomenclaturalRank::Iczn::SpeciesGroup::Species', 'NomenclaturalRank::Iczn::SpeciesGroup::Subspecies', 'NomenclaturalRank::Icn::GenusGroup::Genus', 'NomenclaturalRank::Icn::GenusGroup::Subgenus', 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species', 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Subspecies'].includes(rankString.value);
         };
         return false;
       });
@@ -201,6 +201,10 @@ h3{
           const synonyms = await relationshipsResponse.data;
           const breadcrumbsData = await breadcrumbs.data;
           state.validified = await validify.data;
+          if (!rankString.value) {
+            rankString.value = state.validified[0].rank_string;
+            taxonViewed.value[0].cached_author_year = taxonViewed.value[0].cached_author_year.replace(/\(|\)/g, "");
+          };
           
           jsonToDownload.value["Nomenclature data"]["Taxon viewed"] = taxonViewed.value;
           jsonToDownload.value["Nomenclature data"]["Synonyms from taxon name combinations"] = combinationsResponseSynonyms;

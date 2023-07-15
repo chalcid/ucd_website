@@ -100,7 +100,6 @@
               geo_json: "true",
               per: "10000",
               descendants: "true",
-              token: import.meta.env.VITE_APP_API_TOKEN,
               project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
             }}                                 
           );

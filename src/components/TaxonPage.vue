@@ -163,7 +163,6 @@ h3{
         const response = await api.get(`/taxon_names`,
             {params: {
               taxon_name_id: taxonID,
-              token: import.meta.env.VITE_APP_API_TOKEN,
               project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
         }});
         if(taxonViewed.value.length === 0) {
@@ -173,26 +172,22 @@ h3{
             api.get(`/taxon_names`,
               {params: {
                 combination_taxon_name_id: [taxonID],
-                token: import.meta.env.VITE_APP_API_TOKEN,
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
             }}),
             api.get(`/taxon_name_relationships`,
               {params: {
                 object_taxon_name_id: taxonID,
-                token: import.meta.env.VITE_APP_API_TOKEN,
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
             }}),
             api.get(`/taxon_names/${taxonID}`,
               {params: {
                 extend: ['ancestor_ids'],
-                token: import.meta.env.VITE_APP_API_TOKEN,
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
             }}),
             api.get(`/taxon_names/`,
                     {params: {
                       taxon_name_id: taxonID,
                       validify: true,
-                      token: import.meta.env.VITE_APP_API_TOKEN,
                       project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
             }})
           ]);
@@ -240,7 +235,6 @@ h3{
 
         const synonymResponse = await api.get(`/taxon_names/${taxonID}/inventory/catalog`,
           {params: {
-            token: import.meta.env.VITE_APP_API_TOKEN,
             project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
         }});
 
@@ -252,7 +246,6 @@ h3{
           const response = await api.get(`/data_attributes`,
             {params: {
               attribute_subject_id: taxonID,
-              token: import.meta.env.VITE_APP_API_TOKEN,
               project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
           }});
           const dataAttributesResults = response.data;
@@ -267,7 +260,6 @@ h3{
           const response = await api.get(`/taxon_name_relationships`,
             {params: {
               object_taxon_name_id: taxonID,
-              token: import.meta.env.VITE_APP_API_TOKEN,
               project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
           }});
           const dataAttributesResults = response.data;
@@ -286,7 +278,6 @@ h3{
           const response = await api.get(`/taxon_name_relationships`,
             {params: {
               object_taxon_name_id: taxonID,
-              token: import.meta.env.VITE_APP_API_TOKEN,
               project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
           }});
           const dataAttributesResults = await response.data;
@@ -311,7 +302,6 @@ h3{
         const ancestorIDs = breadcrumbsIDs.filter(id => id !== undefined);
         const promises = ancestorIDs.map(id => api.get(`/taxon_names/${id}`,
           {params: {
-            token: import.meta.env.VITE_APP_API_TOKEN,
             project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
         }}));
         const breadcrumbsResponse = await Promise.all(promises);

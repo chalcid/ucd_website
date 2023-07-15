@@ -106,7 +106,6 @@
             const response = await api.get(`/otus/autocomplete`, 
               {params: {
                 having_taxon_name_only: 'true',
-                token: import.meta.env.VITE_APP_API_TOKEN,
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
                 term: state.searchTerm
               }})
@@ -129,7 +128,6 @@
                     rank: 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species',
                     validity: 'true',
                     exact: 'true',
-                    token: import.meta.env.VITE_APP_API_TOKEN,
                     project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
                   }})
                 state.apiResults = response.data
@@ -143,7 +141,6 @@
                       name: state.genus,
                       rank: 'NomenclaturalRank::Icn::GenusGroup::Genus',
                       validity: 'true',
-                      token: import.meta.env.VITE_APP_API_TOKEN,
                       project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
                     }}),
                   api.get(`/taxon_names`,
@@ -151,7 +148,6 @@
                       name: state.genus,
                       rank: 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species',
                       validity: 'true',
-                      token: import.meta.env.VITE_APP_API_TOKEN,
                       project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
                     }}),
                 ]);
@@ -167,7 +163,6 @@
                     name: state.species,
                     rank: 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species',
                     validity: 'true',
-                    token: import.meta.env.VITE_APP_API_TOKEN,
                     project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
                   }})
                 state.apiResults = response.data;

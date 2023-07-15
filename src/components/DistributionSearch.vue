@@ -114,7 +114,6 @@
           params: {
             geographic_area_id: geographic_area_id,
             per: 5000,
-            token: import.meta.env.VITE_APP_API_TOKEN,
             project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
           },
         });

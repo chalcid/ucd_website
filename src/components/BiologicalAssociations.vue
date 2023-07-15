@@ -81,7 +81,6 @@
             extend: ["object", "subject", "biological_relationship", "taxonomy", "biological_relationship_types", "citations", "source"],
             per: "10000",
             descendants: "true",
-            token: import.meta.env.VITE_APP_API_TOKEN,
             project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
           }}
         );

@@ -159,7 +159,6 @@
           validity: true,
           validify: true,
           per: 1000,
-          token: import.meta.env.VITE_APP_API_TOKEN,
           project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
           },
         });

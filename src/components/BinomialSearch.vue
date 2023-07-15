@@ -108,7 +108,6 @@
           const response = await api.get(`/otus/autocomplete`, 
             {params: {
               having_taxon_name_only: 'true',
-              token: import.meta.env.VITE_APP_API_TOKEN,
               project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
               term: state.searchTerm
             }})
@@ -130,7 +129,6 @@
                   rank: 'NomenclaturalRank::Iczn::SpeciesGroup::Species',
                   validity: 'true',
                   exact: 'true',
-                  token: import.meta.env.VITE_APP_API_TOKEN,
                   project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
                 }})
               state.apiResults = response.data
@@ -144,7 +142,6 @@
                     name: state.genus,
                     rank: 'NomenclaturalRank::Iczn::GenusGroup::Genus',
                     validity: 'true',
-                    token: import.meta.env.VITE_APP_API_TOKEN,
                     project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
                   }}),
                 api.get(`/taxon_names`,
@@ -152,7 +149,6 @@
                     name: state.genus,
                     rank: 'NomenclaturalRank::Iczn::SpeciesGroup::Species',
                     validity: 'true',
-                    token: import.meta.env.VITE_APP_API_TOKEN,
                     project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
                   }}),
               ]);
@@ -168,7 +164,6 @@
                   name: state.species,
                   rank: 'NomenclaturalRank::Iczn::SpeciesGroup::Species',
                   validity: 'true',
-                  token: import.meta.env.VITE_APP_API_TOKEN,
                   project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
                 }})
               state.apiResults = response.data;
@@ -180,7 +175,6 @@
                 {params: {
                   name: state.family,
                   rank: ['NomenclaturalRank::Iczn::FamilyGroup::Family','NomenclaturalRank::Iczn::FamilyGroup::Subfamily','NomenclaturalRank::Iczn::FamilyGroup::Tribe','NomenclaturalRank::Iczn::FamilyGroup::Subtribe','NomenclaturalRank::Iczn::FamilyGroup::Superfamily'],
-                  token: import.meta.env.VITE_APP_API_TOKEN,
                   project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
                 }})
               state.apiResults = response.data;

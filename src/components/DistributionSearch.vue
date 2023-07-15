@@ -1,37 +1,40 @@
-<template>     
-  <ul v-if="nothingClicked">
-    <li><i>Note: be prepared to wait a few seconds if you choose a region with many records.</i></li>
-    <li v-for="country in countryData" :key="country.id">
-      <button v-show="country.regions" @click="toggleCountry(country.id)" id="treeButton">
-        <span v-if="openCountries[country.id]">-</span>
-        <span v-else>+</span>
-      </button>
-      <a @click="fetchDistributions(country.id, country.name), nothingClicked = !nothingClicked" v-if="country.regions" id="countryWithRegions" :to="{ name: 'SearchResults', state: { dsList } }" style="text-decoration:underline; color: var(--bs-link-color);">
-        {{ country.name }}
-      </a>
-      <a @click="fetchDistributions(country.id, country.name), nothingClicked = !nothingClicked" v-else id="countryWithoutRegions" :to="{ name: 'SearchResults', state: { dsList } }" style="text-decoration:underline; color: var(--bs-link-color);">
-        {{ country.name }}
-      </a>
-      <ul v-if="openCountries[country.id]">
-        <li v-for="region in country.regions" :key="region.id" >
-          <a @click="fetchDistributions(region.id, region.name), nothingClicked = !nothingClicked" style="text-decoration:underline; color: var(--bs-link-color);"  id="itemRegion">
-            {{ region.name }}
-          </a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-  <ul v-else>
-    <li><b><a style="text-decoration:underline; color: var(--bs-link-color);" @click="nothingClicked = !nothingClicked">Return to country list</a></b></li>
-    <li><b>Taxa present in: {{ headerName }} </b></li>
-    <li v-for="(item, index) in dsList" :key="index">
-      <span v-for="char, subIndex in splitText(item.otu.taxon_name)" :key="subIndex" :style="{fontStyle: char.shouldItalicize ? 'italic' : 'normal'}">
-        <a style="text-decoration:underline; color: var(--bs-link-color);" @click="displayTaxonPage(item.otu.taxon_name_id)">
-          {{ char.formatted }}
+<template>
+    <ul v-if="nothingClicked">
+      <li><i>Note: be prepared to wait a few seconds if you choose a region with many records.</i></li>
+      <li v-for="country in countryData" :key="country.id">
+        <button v-show="country.regions" @click="toggleCountry(country.id)" id="treeButton">
+          <span v-if="openCountries[country.id]">-</span>
+          <span v-else>+</span>
+        </button>
+        <a @click="fetchDistributions(country.id, country.name), nothingClicked = !nothingClicked" v-if="country.regions" id="countryWithRegions" :to="{ name: 'SearchResults', state: { dsList } }" style="text-decoration:underline; color: var(--bs-link-color);">
+          {{ country.name }}
         </a>
-      </span>
-    </li>
-  </ul>
+        <a @click="fetchDistributions(country.id, country.name), nothingClicked = !nothingClicked" v-else id="countryWithoutRegions" :to="{ name: 'SearchResults', state: { dsList } }" style="text-decoration:underline; color: var(--bs-link-color);">
+          {{ country.name }}
+        </a>
+        <ul v-if="openCountries[country.id]">
+          <li v-for="region in country.regions" :key="region.id" >
+            <a @click="fetchDistributions(region.id, region.name), nothingClicked = !nothingClicked" style="text-decoration:underline; color: var(--bs-link-color);"  id="itemRegion">
+              {{ region.name }}
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <div v-else>
+      <ul v-if="countryResult[0]">
+          <li><b><a style="text-decoration:underline; color: var(--bs-link-color);" @click="resetCountryResult">Return to country list</a></b></li>
+          <li><b>Taxa present in: {{ headerName }} </b></li>
+          <li v-for="(item, index) in dsList" :key="index">
+            <span v-for="char, subIndex in splitText(item.otu.taxon_name)" :key="subIndex" :style="{fontStyle: char.shouldItalicize ? 'italic' : 'normal'}">
+              <a style="text-decoration:underline; color: var(--bs-link-color);" @click="displayTaxonPage(item.otu.taxon_name_id)">
+                {{ char.formatted }}
+              </a>
+            </span>
+          </li>
+      </ul>
+      <div v-else><img src="/spinning-circles.svg" alt="Loading..." width="75"></div>
+    </div>
 </template>
   
 <style scoped>
@@ -155,6 +158,11 @@
         router.push({ name: 'TaxonPage', query: { taxonID: taxonClicked }});
         state.show = !state.show;
       };
+      
+      const resetCountryResult = () => {
+        state.nothingClicked = !state.nothingClicked;
+        state.countryResult = [];
+      };
   
       return { 
         ...toRefs(state),
@@ -164,7 +172,8 @@
         toggleCountry,
         areaClick,
         splitText,
-        displayTaxonPage
+        displayTaxonPage,
+        resetCountryResult
       };
     }
   };

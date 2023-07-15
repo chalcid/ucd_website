@@ -24,7 +24,16 @@
   </div>
   <div class="row">
     <div class="col-md-8" id="stationaryDiv">
-      <div ref="containerOfSynonyms" name="taxonPageSynonymsContainer">
+      <fieldset>
+        <div class="indent">
+          <input type="radio" id="taxonomic-history" value="history" v-model="toggleTree" />
+          <label style="padding-left: 2px; padding-right: 15px;" for="descendant-tree">See taxonomic history</label>
+          <input type="radio" id="descendant-tree" value="tree" v-model="toggleTree" />
+          <label style="padding-left: 2px;" for="taxonomic-history">See included taxa</label>
+        </div>
+      </fieldset>
+      <taxonomic-tree v-show="toggleTree === 'tree'" v-if="taxonViewed[0]" class="space-above"></taxonomic-tree>
+      <div v-show="toggleTree === 'history'" ref="containerOfSynonyms" name="taxonPageSynonymsContainer">
         <div class="col-12 bd-highlight align-items-start" ref="resultsList">
           <button class="btn btn-link" type="button" @click="showSynonyms = !showSynonyms" aria-expanded="false">
             <font-awesome-icon :icon="showSynonyms ? 'angle-down' : 'angle-right'" />
@@ -47,7 +56,7 @@
           </div>
         </div>
     </div>
-    <references v-if="nomenclaturalReferencesResults" :nr-Prop="nomenclaturalReferencesResults"></references>
+    <references v-show="toggleTree === 'history'" v-if="nomenclaturalReferencesResults" :nr-Prop="nomenclaturalReferencesResults"></references>
     <div v-if="isTaxonIDChainPopulated">
       <biological-associations :ba-Prop="taxonIDChain"></biological-associations>
     </div>
@@ -91,11 +100,12 @@ h3{
 </style>
   
 <script>
-  import { onMounted, reactive, computed, ref, toRefs } from 'vue'
-  import api from '/api.js'
-  import BiologicalAssociations from './BiologicalAssociations.vue'
-  import References from "./References.vue"
-  import TaxonDistribution from "./TaxonDistribution.vue"
+  import { onMounted, reactive, computed, ref, toRefs } from 'vue';
+  import api from '/api.js';
+  import BiologicalAssociations from './BiologicalAssociations.vue';
+  import References from "./References.vue";
+  import TaxonDistribution from "./TaxonDistribution.vue";
+  import TaxonomicTree from './TaxonomicTree.vue';
   import { useRoute } from 'vue-router';
   
   export default {
@@ -104,13 +114,15 @@ h3{
     components: {
       BiologicalAssociations,
       References,
-      TaxonDistribution
+      TaxonDistribution,
+      TaxonomicTree
     },
     
     setup() {
       const state = reactive({
         showSynonyms: true,
-        validified: []
+        validified: [],
+        toggleTree: "history"
       })
       
       const route = useRoute();

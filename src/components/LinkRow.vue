@@ -16,7 +16,7 @@
               <router-link :to ="{name: 'DistributionSearch'} " class="nav-link">Browse by country</router-link>
             </li>
             <li class="nav-item">
-              <router-link :to ="{name: 'TaxonomicTree'} " class="nav-link">Taxonomic Tree</router-link>
+              <router-link :to ="{name: 'TaxonomicTree', query: {rootTaxonID: '455458', rootTaxonName: 'Chalcidoidea'}} " class="nav-link">Taxonomic Tree</router-link>
             </li>
         </ul>
     </div>

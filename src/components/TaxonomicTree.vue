@@ -1,13 +1,13 @@
 <template>
   <ul>
-    <li><i>Note: be prepared to wait a few seconds if you choose a taxon with many descendants.</i></li>
-    <li id="superfamily"><b><a>Chalcidoidea</a></b></li>
+    <li v-show="rootTaxonID === '455458'"><i>Note: be prepared to wait a few seconds if you choose a taxon with many descendants.</i></li>
+    <li id="superfamily"><b> {{ rootTaxonName }} </b></li>
     <li v-for="firstDown in (trList[0] && trList[0].children ? trList[0].children : [])" :key="firstDown.id">
-      <button @click="toggleTaxon(firstDown)" id="treeButton">
+      <button v-show="firstDown.rank_string!='NomenclaturalRank::Iczn::SpeciesGroup::Species'" @click="toggleTaxon(firstDown)" id="treeButton">
         <span v-show="openTaxa[firstDown.id] === true">-</span>
         <span v-show="!openTaxa[firstDown.id] === true">+</span>
       </button>
-      <a @click="displayTaxonPage(taxon.id)" id="higherTaxon">
+      <a @click="displayTaxonPage(firstDown.id)" id="higherTaxon">
         <span v-if="firstDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || firstDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'">
           <i>{{ firstDown.name }}</i>
         </span>
@@ -131,23 +131,30 @@
   export default {
     name: 'TaxonomicTree',
     
-    setup(props) {
+    setup() {
       const state = reactive({
         descendants: [],
-        taxonID: '',
         trList: [],
-        treeResult: [],
-        taxon: [],
         openTaxa: {}
       });
       
+      const taxonID = ref('');
       const router = useRouter();      
       const treeData = ref(null);
+      const rootTaxonID = ref('');
+      const rootTaxonName = ref('');
       
       onMounted(async () => {
-        const taxonID = 455458;
-        state.trList.push({id: taxonID, children: []});
-        await getDescendants(taxonID);
+        if (router) {
+          rootTaxonID.value = router.currentRoute.value.query.rootTaxonID;
+          rootTaxonName.value = router.currentRoute.value.query.rootTaxonName;
+          if (rootTaxonID.value === undefined) {
+            rootTaxonID.value = router.currentRoute.value.query.taxonID;
+          }
+          state.taxonID = rootTaxonID.value;
+        }
+        state.trList.push({id: state.taxonID, children: []});
+        await getDescendants(state.taxonID);
       });
       
       const getDescendants = async (taxonID) => {
@@ -164,8 +171,10 @@
         });
         const descendants = await response.data;
         
+        const taxonIDInt = parseInt(taxonID);
+        
         const filteredDescendants = await descendants
-          .filter(item => item.id !== taxonID)
+          .filter(item => item.id !== taxonIDInt)
           .sort((a, b) => a.name.localeCompare(b.name));
         
         const taxon = findTaxon(taxonID, state.trList);
@@ -202,7 +211,7 @@
       };
       
       const taxonClick = (clickedTaxon) => {
-        state.taxonID = state.descendants.find(c => c.id === clickedTaxon);
+        taxonID.value = state.descendants.find(c => c.id === clickedTaxon);
       };
                               
       const splitText = (formatted) => {
@@ -238,7 +247,10 @@
         toggleTaxon,
         taxonClick,
         splitText,
-        displayTaxonPage
+        displayTaxonPage,
+        rootTaxonID,
+        rootTaxonName,
+        taxonID
       };
     }
   };

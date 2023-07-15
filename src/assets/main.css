@@ -15,6 +15,10 @@ a,
   margin-left: calc(var(--bs-gutter-x));
 }
 
+.space-above {
+  margin-top: 0.5em;
+}
+
 .italicizeBreadcrumb {
   font-style: italic;
 }

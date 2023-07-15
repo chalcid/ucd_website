@@ -91,6 +91,7 @@ const routes = [{
         path: '/taxonomicTree',
         name: 'TaxonomicTree',
         meta: {title: 'UCD: Taxonomic tree'},
+        props: true,
         component: TaxonomicTree
     }
 ];

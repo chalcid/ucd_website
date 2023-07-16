@@ -13,14 +13,15 @@ import AssociatesSearch from './components/AssociatesSearch.vue';
 import DistributionSearch from './components/DistributionSearch.vue';
 import KeywordSearch from './components/KeywordSearch.vue';
 import TaxonomicTree from './components/TaxonomicTree.vue';
+import Images from './components/Images.vue';
 import './assets/main.css';
 import 'leaflet/dist/leaflet.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faAngleDown, faAngleRight, faPhone } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleRight, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-library.add(faAngleDown, faAngleRight);
+library.add(faAngleDown, faAngleRight, faAngleLeft);
 
 const routes = [{
         path:'/everything',
@@ -93,6 +94,11 @@ const routes = [{
         meta: {title: 'UCD: Taxonomic tree'},
         props: true,
         component: TaxonomicTree
+    },
+    {
+        path: '/images',
+        name: 'Images',
+        component: Images
     }
 ];
 const router = createRouter({

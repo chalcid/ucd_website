@@ -62,7 +62,7 @@
       });
       
       const baReferences = computed(() => {
-        let references = state.biologicalAssociationsJson.flatMap(item => item.citations.map(citation => citation.source.object_tag));
+        const references = state.biologicalAssociationsJson.flatMap(item => item.citations.map(citation => citation.source.object_tag));
         jsonToDownload.value["Biological association references"] = references;
         return references.sort();
       });
@@ -84,7 +84,7 @@
             project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
           }}
         );
-        let newData = await baResponse.data;
+        const newData = await baResponse.data;
         state.biologicalAssociationsJson = await newData;
         jsonToDownload.value["Biological association data"] = state.biologicalAssociationsJson;
       });
@@ -121,14 +121,14 @@
       };
       
       function objectToTabDelimited(obj) {
-        let fields = Object.keys(obj);
-        let tsvData = fields.map(fieldName => `${fieldName}\t${obj[fieldName]}`);
+        const fields = Object.keys(obj);
+        const tsvData = fields.map(fieldName => `${fieldName}\t${obj[fieldName]}`);
         return tsvData.join('\r\n');
       };
       
       const downloadTSV = () => {      
-        let flatObject = flattenObject(jsonToDownload.value);
-        let tsvData = objectToTabDelimited(flatObject);
+        const flatObject = flattenObject(jsonToDownload.value);
+        const tsvData = objectToTabDelimited(flatObject);
                 
         const blob = new Blob([tsvData], {type: 'text/csv;charset=utf-8;'});
         const url = URL.createObjectURL(blob);

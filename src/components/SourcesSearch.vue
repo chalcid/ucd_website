@@ -69,6 +69,7 @@
                 year_start: state.year,
                 year_end: state.year,
                 query_term: state.title,
+                per: "10000",
                 extend: ['bibtex'],
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
               }})
@@ -81,6 +82,7 @@
                 author: state.author,
                 year_start: state.year,
                 year_end: state.year,
+                per: "10000",
                 extend: ['bibtex'],
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
               }})
@@ -92,6 +94,7 @@
               {params: {
                 author: state.author,
                 query_term: state.title,
+                per: "10000",
                 extend: ['bibtex'],
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
               }})
@@ -104,6 +107,7 @@
                 year_start: state.year,
                 year_end: state.year,
                 query_term: state.title,
+                per: "10000",
                 extend: ['bibtex'],
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
               }})
@@ -114,6 +118,7 @@
             const response = await api.get(`/sources`,
               {params: {
                 author: state.author,
+                per: "10000",
                 extend: ['bibtex'],
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
               }})
@@ -125,6 +130,7 @@
               {params: {
                 year_start: state.year,
                 year_end: state.year,
+                per: "10000",
                 extend: ['bibtex'],
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
               }})
@@ -135,7 +141,7 @@
             const response = await api.get(`/sources`,
               {params: {
                 query_term: state.title,
-                validity: 'true',
+                per: "10000",
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
               }})
             state.apiResults = response.data;

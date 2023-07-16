@@ -4,11 +4,11 @@
       <legend>Search Mode</legend>
       <div>
         <input type="radio" id="autocomplete-search" value="autocomplete" v-model="searchMode" />
-        <label style="padding-left: 2px; padding-right: 15px;" for="autocomplete-search">Autocomplete search (wait for results to appear)</label>
+        <label class="padding-left-and-right" for="autocomplete-search">Autocomplete search (wait for results to appear)</label>
       </div>
       <div>
         <input type="radio" id="regular-search" value="regular" v-model="searchMode" />
-        <label style="padding-left: 2px;" for="regular-search">Regular search (higher taxa mutually exclusive)</label>
+        <label class="padding-left" for="regular-search">Regular search (higher taxa mutually exclusive)</label>
       </div>
     </fieldset>
     <div v-if="searchMode === 'autocomplete'" class="col-12">
@@ -39,35 +39,6 @@
   <searchResults v-show="!blankResults" :srProp="apiResults"></searchResults>
   <span v-show="blankResults">No results were returned</span>
 </template>
-
-<style scoped>
-  #dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    background-color: #ffffff;
-    border: 1px solid #cccccc;
-    border-top: none;
-    z-index: 100;
-    min-width: 100%;
-  }
-
-  #dropdown-menu li {
-    padding: 0.5rem;
-    cursor: pointer;
-  }
-
-  #dropdown-menu li:hover {
-    background-color: #d6c20d;
-  }
-  
-  #binomial-search-input {
-    max-width: 480px;
-  }
-</style>
   
 <script> 
   import { reactive } from '@vue/runtime-core'

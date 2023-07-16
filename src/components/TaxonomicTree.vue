@@ -21,7 +21,7 @@
             <span v-show="openTaxa[secondDown.id] === true">-</span>
             <span v-show="!openTaxa[secondDown.id] === true">+</span>
           </button>
-          <a @click="displayTaxonPage(secondDown.id), nothingClicked = !nothingClicked" style="text-decoration:underline; color: var(--bs-link-color);" id="higherTaxon">
+          <a @click="displayTaxonPage(secondDown.id), nothingClicked = !nothingClicked" class="normal-links" id="higherTaxon">
             <span v-if="secondDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || secondDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'">
               <i>{{ secondDown.name }}</i>
             </span>
@@ -35,7 +35,7 @@
                 <span v-show="openTaxa[thirdDown.id] === true">-</span>
                 <span v-show="!openTaxa[thirdDown.id] === true">+</span>
               </button>
-              <a @click="displayTaxonPage(thirdDown.id), nothingClicked = !nothingClicked" style="text-decoration:underline; color: var(--bs-link-color);" id="higherTaxon">
+              <a @click="displayTaxonPage(thirdDown.id), nothingClicked = !nothingClicked" class="normal-links" id="higherTaxon">
                 <span v-if="thirdDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || thirdDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'">
                   <i> {{ thirdDown.name }} </i>
                 </span>
@@ -59,7 +59,7 @@
                   </a>
                   <ul v-show="openTaxa[fourthDown.id] === true && fourthDown.children">
                     <li v-for="fifthDown in fourthDown.children" :key="fifthDown.id">
-                      <a @click="displayTaxonPage(fifthDown.id), nothingClicked = !nothingClicked" id="species" style="padding-left: 20px;">
+                      <a @click="displayTaxonPage(fifthDown.id), nothingClicked = !nothingClicked" id="species" class="padding-left-twenty">
                         <span v-if="fifthDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || fifthDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'">
                           <i> {{ fifthDown.name }} </i>
                         </span>
@@ -86,40 +86,6 @@
 
   ul ul {
     padding-left: 20px;
-  }
-  
-  #treeButton {
-    background-color: #ffffff;
-    width: 19px;
-    height: 19px;
-    line-height: 5px;
-    text-align: center;
-    border: 1px solid black;
-    font-size: small;
-  }
-  
-  #treeButton:hover {
-    background-color: rgb(134, 134, 134);
-  }
-  
-  #species {
-    padding-left: 10px;
-    text-decoration:underline; 
-    color: var(--bs-link-color)
-  }
-  
-  #higherTaxon {
-    padding-left: 5px;
-    text-decoration:underline; 
-    color: var(--bs-link-color)
-  }
-  
-  #itemDescendant {
-    padding-left: 20px;
-  }
-  
-  #superfamily {
-    font-size: larger;
   }
 </style>
   

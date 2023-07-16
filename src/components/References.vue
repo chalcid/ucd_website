@@ -26,12 +26,6 @@
   </div>
 </template>
 
-<style scoped> 
-  #showIfNoQuery{
-    padding-left: 2em;
-  }
-</style>
-
 <script>
   import { reactive, toRefs, computed } from 'vue';
   

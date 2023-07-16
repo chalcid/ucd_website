@@ -9,7 +9,7 @@
             <span v-if="srProp[index].rank_string==='NomenclaturalRank::Iczn::GenusGroup::Genus' || srProp[index].rank_string==='NomenclaturalRank::Iczn::SpeciesGroup::Species' || srProp[index].rank_string==='NomenclaturalRank::Icn::GenusGroup::Genus' || srProp[index].rank_string==='NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species'"><i>{{ srProp[index].cached }}</i></span><span v-else>{{ srProp[index].cached }}</span> {{ srProp[index].cached_author_year }}</a>
         </li>
       </ul>
-      <ul v-else-if="soProp">
+      <ul v-else-if="soProp" id="results-list-span">
         <li id="results-list-item" class="space-below"
           v-for="(sourceItem, index) in soProp" 
             :key="sourceItem.id">

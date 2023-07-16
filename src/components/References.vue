@@ -13,9 +13,9 @@
       <div id="collapseReferences" v-show="showReferences">
         <div id = "showIfQuery" v-if="nrProp || barProp || adProp">
           <ul id="results-list-span">
-            <li style="list-style-type:none" v-show="nrProp" v-for="object_tag in sortedReferences" :key="object_tag" v-html="object_tag"></li>
-            <li style="list-style-type:none" v-show="barProp" v-for="object_tag in sortedReferences" :key="object_tag" v-html="object_tag"></li>
-            <li style="list-style-type:none" v-show="adProp" v-for="name in sortedReferences" :key="name" v-html="name"></li>
+            <li id="results-list-item" v-show="nrProp" v-for="object_tag in sortedReferences" :key="object_tag" v-html="object_tag"></li>
+            <li id="results-list-item" v-show="barProp" v-for="object_tag in sortedReferences" :key="object_tag" v-html="object_tag"></li>
+            <li id="results-list-item" v-show="adProp" v-for="name in sortedReferences" :key="name" v-html="name"></li>
           </ul>
         </div>
         <div id="showIfNoQuery" v-else>
@@ -52,13 +52,13 @@
       const sortedReferences = computed(() => {
        if (props.nrProp) {
         return sortAndRemoveDuplicates(props.nrProp);
-      } 
-      else if (props.barProp) {
-        return sortAndRemoveDuplicates(props.barProp);
-      }
-      else if (props.adProp) {
-        return sortAndRemoveDuplicates(props.adProp);
-      }
+        } 
+        else if (props.barProp) {
+          return sortAndRemoveDuplicates(props.barProp);
+        }
+        else if (props.adProp) {
+          return sortAndRemoveDuplicates(props.adProp);
+        }
       });
 
       function sortAndRemoveDuplicates(references) {

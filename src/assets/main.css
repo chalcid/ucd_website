@@ -41,6 +41,14 @@ a,
   padding-right: 1em;
 }
 
+#results-list-item {
+  list-style-type:none;
+}
+
+#sources-list-item {
+  list-style-type:none;
+}
+
 .nav-link.router-link-active {
   background-color: #ccc;
   color: #000;
@@ -62,9 +70,26 @@ a,
   padding-left: 20px;
 }
 
-.carouselArrow {
+.carousel-arrow {
   height: 50px;
-  
+}
+
+.full-width {
+  width: 100%;
+}
+
+.normal-links {
+  text-decoration:underline; 
+  color: var(--bs-link-color);
+}
+
+.two-pixel-padding-left {
+  padding-left: 2px;
+}
+
+.padding-left-and-right {
+  padding-left: 2px; 
+  padding-right: 15px;
 }
 
 @media (hover: hover) {

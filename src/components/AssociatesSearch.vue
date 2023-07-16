@@ -1,44 +1,42 @@
-<template v-slot:associatesSearch>
-    <div class="row" ref="containerOfComponent" v-show="show" name="associatesSearchContainer">
-      <fieldset>
-        <legend>Search Mode</legend>
-        <div>
-          <div>
-            <input type="radio" id="autocomplete-search" value="autocomplete" v-model="searchMode" />
-            <label style="padding-left: 2px; padding-right: 15px;" for="autocomplete-search">Autocomplete search (wait for results to appear)</label>
-          </div>
-          <div>
-            <input type="radio" id="regular-search" value="regular" v-model="searchMode" />
-            <label style="padding-left: 2px;" for="regular-search">Regular search</label>
-          </div>
-        </div>
-      </fieldset>
-      <div v-if="searchMode === 'regular'" class="col-8" ref="containerOfInputGroup">
-        <div class="input-group mb-3 align-items-start" id="associates-search-group">
-          <span class="input-group-text" id="genus-input-label">genus</span>
-          <input type="text" class="form-control" id="associates-search-input" aria-describedby="genus-input" v-model="genus" @keyup.enter="useInputTerms($event)" />
-          <span class="input-group-text" id="species-input-label">species</span>
-          <input type="text" class="form-control" id="associates-search-input" aria-describedby="species-input" v-model="species" @keyup.enter="useInputTerms($event)" />
-          <button class="btn btn-outline-secondary" type="button" id="associates-search-button" @click="useInputTerms($event)">search</button>
-        </div>
+<template>
+  <div class="row" ref="containerOfComponent" v-show="show" name="associatesSearchContainer">
+    <fieldset>
+      <legend>Search Mode</legend>
+      <div>
+        <input type="radio" id="autocomplete-search" value="autocomplete" v-model="searchMode" />
+        <label class="padding-left-and-right" for="autocomplete-search">Autocomplete search (wait for results to appear)</label>
       </div>
-      <div v-if="searchMode === 'autocomplete'" class="col-12" ref="containerOfInputGroup">
-        <div class="dropdown">
-          <input type="text" v-model="searchTerm" @input="fetchAutocompleteResults" @select="handleSelection" @focus="showDropdown = true" />
-          <ul id="dropdown-menu" ref="autocompleteList" v-show="showDropdown">
-            <li 
-              v-for="result in autocompleteResults" 
-              :key="result.id" 
-              @click="displayAutocompleteTaxonPage(result)"
-              v-html="formatResult(result)">
-            </li>
-          </ul>
-        </div>
+      <div>
+        <input type="radio" id="regular-search" value="regular" v-model="searchMode" />
+        <label class="two-pixel-padding-left" for="regular-search">Regular search</label>
+      </div>
+    </fieldset>
+    <div v-if="searchMode==='regular'" class="col-8" ref="containerOfInputGroup">
+      <div class="input-group mb-3 align-items-start" id="associates-search-group">
+        <span class="input-group-text" id="genus-input-label">genus</span>
+        <input type="text" class="form-control" id="associates-search-input" aria-describedby="genus-input" v-model="genus" @keyup.enter="useInputTerms($event)" />
+        <span class="input-group-text" id="species-input-label">species</span>
+        <input type="text" class="form-control" id="associates-search-input" aria-describedby="species-input" v-model="species" @keyup.enter="useInputTerms($event)" />
+        <button class="btn btn-outline-secondary" type="button" id="associates-search-button" @click="useInputTerms($event)">search</button>
       </div>
     </div>
-    <br>
-    <searchResults :srProp="apiResults"></searchResults>
-  </template>
+    <div v-if="searchMode==='autocomplete'" class="col-12" ref="containerOfInputGroup">
+      <div class="dropdown">
+        <input type="text" v-model="searchTerm" @input="fetchAutocompleteResults" @select="handleSelection" @focus="showDropdown = true" />
+        <ul id="dropdown-menu" ref="autocompleteList" v-show="showDropdown">
+          <li 
+            v-for="result in autocompleteResults" 
+            :key="result.id" 
+            @click="displayAutocompleteTaxonPage(result)"
+            v-html="formatResult(result)">
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <br>
+  <searchResults :srProp="apiResults"></searchResults>
+</template>
   
   <style scoped>
     #dropdown-menu {
@@ -172,8 +170,7 @@
               
             }
           } catch (error) {
-            console.error(`An error occurred when calling useInputTerms: ${error.message}`)
-            console.error(error.stack);
+            console.error(`An error occurred when calling associates: ${error.message}`)
           }
         };
           

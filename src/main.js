@@ -14,6 +14,7 @@ import DistributionSearch from './components/DistributionSearch.vue';
 import KeywordSearch from './components/KeywordSearch.vue';
 import TaxonomicTree from './components/TaxonomicTree.vue';
 import Images from './components/Images.vue';
+import SourcesSearch from './components/SourcesSearch.vue'
 import './assets/main.css';
 import 'leaflet/dist/leaflet.css';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -99,6 +100,11 @@ const routes = [{
         path: '/images',
         name: 'Images',
         component: Images
+    },
+    {
+        path: '/sourcesSearch',
+        name: 'SourcesSearch',
+        component: SourcesSearch
     }
 ];
 const router = createRouter({

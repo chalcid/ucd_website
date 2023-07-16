@@ -6,8 +6,16 @@
         v-if="srProp" 
         v-for="(taxonNameItem, index) in srProp" 
           :key="taxonNameItem.id">
-          <a style="text-decoration:underline; color: var(--bs-link-color);" @click="displayTaxonPage(srProp[index]), show=!show">
-          <span v-if="srProp[index].rank_string==='NomenclaturalRank::Iczn::GenusGroup::Genus' || srProp[index].rank_string==='NomenclaturalRank::Iczn::SpeciesGroup::Species' || srProp[index].rank_string==='NomenclaturalRank::Icn::GenusGroup::Genus' || srProp[index].rank_string==='NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species'"><i>{{ srProp[index].cached }}</i></span><span v-else>{{ srProp[index].cached }}</span> {{ srProp[index].cached_author_year }}</a></li>
+          <a class="normal-links" @click="displayTaxonPage(srProp[index]), show=!show">
+          <span v-if="srProp[index].rank_string==='NomenclaturalRank::Iczn::GenusGroup::Genus' || srProp[index].rank_string==='NomenclaturalRank::Iczn::SpeciesGroup::Species' || srProp[index].rank_string==='NomenclaturalRank::Icn::GenusGroup::Genus' || srProp[index].rank_string==='NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species'"><i>{{ srProp[index].cached }}</i></span><span v-else>{{ srProp[index].cached }}</span> {{ srProp[index].cached_author_year }}</a>
+      </li>
+      <ul v-else-if="soProp" id="results-list-span">
+        <li id="results-list-item" class="space-below"
+          v-for="(sourceItem, index) in soProp" 
+            :key="sourceItem.id">
+            <span v-html="soProp[index].cached"></span> <a class="normal-links" @click="copyBibtex(soProp[index].bibtex)">copy bibtex</a>
+        </li>
+      </ul>
       <span v-else>No search results have been returned yet.</span>
     </span>
     </div>
@@ -21,14 +29,15 @@
 </style>
 
 <script>
-  import { reactive } from '@vue/runtime-core'
+  import { computed, reactive } from '@vue/runtime-core'
   import { useRouter } from 'vue-router'
   
   export default {
     name: 'SearchResults',
     
     props: {
-      srProp: Array
+      srProp: Array,
+      soProp: Array
     },
     
     setup() {
@@ -45,8 +54,21 @@
         state.show = !state.show;
       };
       
+      const bibtex = computed(() => props.soProp[props.index].bibtex);
+      
+      const copyBibtex = (bibtex) => {
+        try {
+          navigator.clipboard.writeText(bibtex);
+          return { copyBibtex };
+        } catch (error) {
+          console.log("There was a problem copying the bibtex.")
+        };
+      };
+      
       return {
-        displayTaxonPage
+        displayTaxonPage,
+        bibtex,
+        copyBibtex
       };
     }
   }

@@ -3,7 +3,7 @@
     <div>Image {{ currentImageIndex + 1 }} of {{ imData.length }}</div>
     <div style="display: flex; justify-content: center; align-items: center;">
       <font-awesome-icon v-if="imData.length > 1" class="carouselArrow" icon="angle-left" @click="previousImage"/>
-      <img :src="imData[currentImageIndex].medium" alt="Image description">
+      <a :href="imData[currentImageIndex].original" target="_blank"><img :src="imData[currentImageIndex].medium" alt="Image description"></a>
       <font-awesome-icon v-if="imData.length > 1" class="carouselArrow" icon="angle-right" @click="nextImage"/>
     </div>
   </div>
@@ -30,6 +30,7 @@
             const imResponse = await api.get(`/images`,
             {params: {
               taxon_name_id: props.baProp,
+              per: "10000",
               project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
             }});
             imData.value = await imResponse.data;

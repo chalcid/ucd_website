@@ -16,9 +16,13 @@
   <div class="row">
     <div class="col-12">
       <h3 v-if="italicized && taxonViewed[0] && taxonViewed[0].cached_is_valid===true"><i>{{ taxonViewed[0].cached }}</i> {{ taxonViewed[0].cached_author_year }}</h3>
+      <h3 v-else-if="italicized && taxonViewed[0] && taxonViewed[0].cached_is_valid===false"><i>{{ validified[0].cached_original_combination }}</i> {{ taxonViewed[0].cached_author_year }}</h3>
+      <h3 v-else-if="italicized && taxonViewed[0] && taxonViewed[0].cached_is_valid===false && validified[0]"><i>{{ validified[0].cached_original_combination }}</i> {{ taxonViewed[0].cached_author_year }}</h3>
       <h3 v-else-if="taxonViewed[0] && taxonViewed[0].cached_is_valid===true">{{ taxonViewed[0].cached }} {{ taxonViewed[0].cached_author_year }}</h3>
-      <span v-else-if="italicized && taxonViewed[0] && validified[0] && taxonViewed[0].cached_is_valid===false"><h3><i>{{ validified[0].cached_original_combination }}</i> {{ taxonViewed[0].cached_author_year }}</h3><h5>Invalid name. Valid name: <router-link :to="{ name: 'TaxonPage', query: { taxonID: validified[0].id }}"><i>{{ validified[0].cached }}</i> {{ validified[0].cached_author_year }}</router-link></h5></span>
-      <span v-else-if="taxonViewed[0] && validified[0] && taxonViewed[0].cached_is_valid===false"><h3></h3><h5>Invalid name. Valid name: <i>{{ validified[0].cached }}</i> {{ validified[0].cached_author_year }}</h5></span>
+      <h3 v-else-if="taxonViewed[0] && taxonViewed[0].cached_is_valid===false">{{ taxonViewed[0].cached }} {{ taxonViewed[0].cached_author_year }}</h3>
+      <span v-else></span>
+      <span v-if="italicized && taxonViewed[0] && validified[0] && taxonViewed[0].cached_is_valid===false"><h5>Invalid name. Valid name: <router-link :to="{ name: 'TaxonPage', query: { taxonID: validified[0].id }}"><i>{{ validified[0].cached }}</i> {{ validified[0].cached_author_year }}</router-link></h5></span>
+      <span v-else-if="taxonViewed[0] && validified[0] && taxonViewed[0].cached_is_valid===false"><h3></h3><h5>Invalid name. Valid name: <router-link :to="{ name: 'TaxonPage', query: { taxonID: validified[0].id }}">{{ validified[0].cached }} {{ validified[0].cached_author_year }}</router-link></h5></span>
       <span v-else></span>
     </div>
   </div>

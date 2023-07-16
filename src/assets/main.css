@@ -96,6 +96,20 @@ a,
   padding-left: 20px;
 }
 
+.link-row {
+  overflow-x: auto;
+}
+
+.link-row .nav {
+  display: flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.nav-item {
+  flex-shrink: 0;
+}
+
 .nav-link.router-link-active {
   background-color: #ccc;
   color: #000;

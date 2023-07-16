@@ -1,7 +1,7 @@
 <!-- This is a row of links that should be positioned below the banner and above any other interactive items-->
 
 <template>
-    <div class="row" name="linkRowContainer">
+    <div class="link-row">
         <ul class = "nav">
           <li class="nav-item">
               <router-link :to ="{name: 'Home'} " class="nav-link">Home</router-link>

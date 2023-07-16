@@ -1,15 +1,15 @@
 <template>
   <div class="row" ref="containerOfResults" name="associatesSearchResultsContainer">
     <div class="col-12 bd-highlight align-items-start" id="results-list-div" ref="resultsList">
-    <span class="search-results">
-      <li style="list-style-type:none" 
-        v-if="srProp" 
-        v-for="(taxonNameItem, index) in srProp" 
-          :key="taxonNameItem.id">
-          <a class="normal-links" @click="displayTaxonPage(srProp[index]), show=!show">
-          <span v-if="srProp[index].rank_string==='NomenclaturalRank::Iczn::GenusGroup::Genus' || srProp[index].rank_string==='NomenclaturalRank::Iczn::SpeciesGroup::Species' || srProp[index].rank_string==='NomenclaturalRank::Icn::GenusGroup::Genus' || srProp[index].rank_string==='NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species'"><i>{{ srProp[index].cached }}</i></span><span v-else>{{ srProp[index].cached }}</span> {{ srProp[index].cached_author_year }}</a>
-      </li>
-      <ul v-else-if="soProp" id="results-list-span">
+      <ul v-if="srProp" id="results-list-span">
+        <li id="results-list-item"
+          v-for="(taxonNameItem, index) in srProp" 
+            :key="taxonNameItem.id">
+            <a class="normal-links" @click="displayTaxonPage(srProp[index]), show=!show">
+            <span v-if="srProp[index].rank_string==='NomenclaturalRank::Iczn::GenusGroup::Genus' || srProp[index].rank_string==='NomenclaturalRank::Iczn::SpeciesGroup::Species' || srProp[index].rank_string==='NomenclaturalRank::Icn::GenusGroup::Genus' || srProp[index].rank_string==='NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species'"><i>{{ srProp[index].cached }}</i></span><span v-else>{{ srProp[index].cached }}</span> {{ srProp[index].cached_author_year }}</a>
+        </li>
+      </ul>
+      <ul v-else-if="soProp">
         <li id="results-list-item" class="space-below"
           v-for="(sourceItem, index) in soProp" 
             :key="sourceItem.id">
@@ -17,16 +17,9 @@
         </li>
       </ul>
       <span v-else>No search results have been returned yet.</span>
-    </span>
     </div>
   </div>
 </template>
-
-<style>
-  #results-list-div {
-    padding-left: 2em;
-  }
-</style>
 
 <script>
   import { computed, reactive } from '@vue/runtime-core'

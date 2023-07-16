@@ -6,15 +6,15 @@
           <span v-if="openCountries[country.id]">-</span>
           <span v-else>+</span>
         </button>
-        <a @click="fetchDistributions(country.id, country.name), nothingClicked = !nothingClicked" v-if="country.regions" id="countryWithRegions" :to="{ name: 'SearchResults', state: { dsList } }" style="text-decoration:underline; color: var(--bs-link-color);">
+        <a @click="fetchDistributions(country.id, country.name), nothingClicked = !nothingClicked" v-if="country.regions" id="countryWithRegions" :to="{ name: 'SearchResults', state: { dsList } }" class="normal-links">
           {{ country.name }}
         </a>
-        <a @click="fetchDistributions(country.id, country.name), nothingClicked = !nothingClicked" v-else id="countryWithoutRegions" :to="{ name: 'SearchResults', state: { dsList } }" style="text-decoration:underline; color: var(--bs-link-color);">
+        <a @click="fetchDistributions(country.id, country.name), nothingClicked = !nothingClicked" v-else id="countryWithoutRegions" :to="{ name: 'SearchResults', state: { dsList } }" class="normal-links">
           {{ country.name }}
         </a>
         <ul v-if="openCountries[country.id]">
           <li v-for="region in country.regions" :key="region.id" >
-            <a @click="fetchDistributions(region.id, region.name), nothingClicked = !nothingClicked" style="text-decoration:underline; color: var(--bs-link-color);"  id="itemRegion">
+            <a @click="fetchDistributions(region.id, region.name), nothingClicked = !nothingClicked" class="normal-links" id="itemDescendant">
               {{ region.name }}
             </a>
           </li>
@@ -23,11 +23,11 @@
     </ul>
     <div v-else>
       <ul v-if="countryResult[0]">
-          <li><b><a style="text-decoration:underline; color: var(--bs-link-color);" @click="resetCountryResult">Return to country list</a></b></li>
+          <li><b><a class="normal-links" @click="resetCountryResult">Return to country list</a></b></li>
           <li><b>Taxa present in: {{ headerName }} </b></li>
           <li v-for="(item, index) in dsList" :key="index">
             <span v-for="char, subIndex in splitText(item.otu.taxon_name)" :key="subIndex" :style="{fontStyle: char.shouldItalicize ? 'italic' : 'normal'}">
-              <a style="text-decoration:underline; color: var(--bs-link-color);" @click="displayTaxonPage(item.otu.taxon_name_id)">
+              <a class="normal-links" @click="displayTaxonPage(item.otu.taxon_name_id)">
                 {{ char.formatted }}
               </a>
             </span>
@@ -43,32 +43,6 @@
   }
 
   ul ul {
-    padding-left: 20px;
-  }
-  
-  #treeButton {
-    background-color: #ffffff;
-    width: 19px;
-    height: 19px;
-    line-height: 5px;
-    text-align: center;
-    border: 1px solid black;
-    font-size: small;
-  }
-  
-  #treeButton:hover {
-    background-color: rgb(134, 134, 134);
-  }
-  
-  #countryWithRegions {
-    padding-left: 5px;
-  }
-  
-  #countryWithoutRegions {
-    padding-left: 24px;
-  }
-  
-  #itemRegion {
     padding-left: 20px;
   }
 </style>

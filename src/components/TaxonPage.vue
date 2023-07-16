@@ -27,9 +27,9 @@
       <fieldset>
         <div class="indent">
           <input type="radio" id="taxonomic-history" value="history" v-model="toggleTree" />
-          <label style="padding-left: 2px; padding-right: 15px;" for="descendant-tree">See taxonomic history</label>
+          <label class="padding-left-and-right" for="descendant-tree">See taxonomic history</label>
           <input type="radio" id="descendant-tree" value="tree" v-model="toggleTree" />
-          <label style="padding-left: 2px;" for="taxonomic-history">See included taxa</label>
+          <label class="padding-left" for="taxonomic-history">See included taxa</label>
         </div>
       </fieldset>
       <taxonomic-tree v-show="toggleTree === 'tree'" v-if="taxonViewed[0]" class="space-above"></taxonomic-tree>
@@ -44,7 +44,7 @@
           <div id="collapseSynonyms" v-show="showSynonyms">
             <div id="showIfQuery" v-if="resultsExist">
               <ul v-if="synonymArray" id="results-list-span">
-                <li style="list-style-type:none" v-for="tag in synonymArray.timeline" :key="tag" v-html="tag.label"></li>
+                <li id="results-list-item" v-for="tag in synonymArray.timeline" :key="tag" v-html="tag.label"></li>
               </ul>
               <div class="indent" v-show="rankString==='NomenclaturalRank::Iczn::SpeciesGroup::Species' && concatenatedTypeInfo != 'Type information: '">{{ concatenatedTypeInfo }}</div>
               <div class="indent" v-show="rankString==='NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString==='NomenclaturalRank::Iczn::GenusGroup::Subgenus'">Type species: <router-link :to="{ name: 'TaxonPage', query: { taxonID: typeID }}" v-if="typeID"> <span v-html="concatenatedTypeInfo"></span></router-link></div>
@@ -66,7 +66,6 @@
     <div v-show="isTaxonIDChainPopulated" class="col-md-4" id="movingDiv">
       <images v-if="taxonIDChain && taxonIDChain.length > 0" :ba-Prop="taxonIDChain" class="space-below"></images>
       <div v-if="rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'"><taxon-distribution v-if="taxonIDChain && taxonIDChain.length > 0" :ba-Prop="taxonIDChain"></taxon-distribution></div>
-      <div v-else><img src="/spinning-circles.svg" alt="Loading..." width="75"></div>
     </div>
   </div>
 </template>
@@ -75,28 +74,6 @@
 h3{
   margin-top: 0.5em;
   margin-bottom: 0.5em;
-}
-@media (min-width: 1537px) {
-  #stationaryDiv {
-    flex: 0 0 64%;
-    max-width: 64%;
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  #movingDiv {
-    flex: 0 0 33.33333%;
-    max-width: 33.33333%;
-    padding-left: 0;
-    padding-right: 0;
-  }
-}
-
-@media (max-width: 1536px) {
-  #movingDiv {
-    flex: max-content;
-    max-width: 100%;
-  }
 }
 </style>
   

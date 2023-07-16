@@ -11,7 +11,7 @@
         <div id="collapseBiologicalAssociations" v-show="showBiologicalAssociations">
           <div id = "showIfQuery" v-if="sortedBiologicalAssociations">
             <ul id="results-list-span">
-              <li style="list-style-type:none" v-for="object_tag in sortedBiologicalAssociations" :key="object_tag" v-html="object_tag"></li>
+              <li id="sources-list-item" v-for="object_tag in sortedBiologicalAssociations" :key="object_tag" v-html="object_tag"></li>
             </ul>
           </div>
         </div>

@@ -17,7 +17,7 @@
         <span class="input-group-text" id="author-input-label">author</span>
         <input type="text" class="form-control" id="sources-search-input" aria-describedby="genus-input" v-model="author" @keyup.enter="useInputTerms($event)" />
         <span class="input-group-text" id="author-input-label">year</span>
-        <input type="text" class="form-control" id="sources-search-input" aria-describedby="genus-input" v-model="year" @keyup.enter="useInputTerms($event)" />
+        <input type="text" style="max-width: 10%;" class="form-control" id="sources-search-input" aria-describedby="genus-input" v-model="year" @keyup.enter="useInputTerms($event)" />
         <span class="input-group-text" id="species-input-label">title word</span>
         <input type="text" class="form-control" id="sources-search-input" aria-describedby="species-input" v-model="title" @keyup.enter="useInputTerms($event)" />
         <button class="btn btn-outline-secondary" type="button" id="sources-search-button" @click="useInputTerms($event)">search</button>
@@ -27,7 +27,6 @@
       </div>-->
     </div>
   </div>
-  <br>
   <searchResults :soProp="apiResults" class="space-below"></searchResults>
 </template>
 
@@ -41,8 +40,8 @@
     name: 'SourcesSearch',
     
     components: {
-    SearchResults
-},
+      SearchResults
+    },
     
     setup() {
       const state = reactive({

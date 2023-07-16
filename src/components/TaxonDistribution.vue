@@ -8,7 +8,7 @@
 </template>
 
 <script>
-  import { computed, ref, reactive, onMounted, toRefs } from 'vue';
+  import { computed, ref, reactive, onMounted, toRefs, nextTick } from 'vue';
   import L from 'leaflet';
   import 'leaflet-providers';
   import api from '/api.js';
@@ -48,6 +48,7 @@
       });
       
       onMounted(async () => {
+        nextTick();
         await fetchTaxonDistributions();
       });
 
@@ -91,23 +92,27 @@
       };
 
       const fetchTaxonDistributions = async () => {
-        if (props.baProp) {
-          const tdResponse = await api.get(`/asserted_distributions?`,
-            {params: {
-              taxon_name_id: props.baProp,
-              embed: ["shape"],
-              extend: ["geographic_area", "citations"],
-              geo_json: "true",
-              per: "10000",
-              descendants: "true",
-              project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
-            }}                                 
-          );
-          const newData = tdResponse.data;
-          state.taxonDistributionsJson.length = 0;
-          state.taxonDistributionsJson.push(...newData);
-          
-          initializeMap();
+        try {
+          if (props.baProp && props.baProp.length > 0) {
+            const tdResponse = await api.get(`/asserted_distributions?`,
+              {params: {
+                taxon_name_id: props.baProp,
+                embed: ["shape"],
+                extend: ["geographic_area", "citations"],
+                geo_json: "true",
+                per: "10000",
+                descendants: "true",
+                project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
+              }}                                 
+            );
+            const newData = tdResponse.data;
+            state.taxonDistributionsJson.length = 0;
+            state.taxonDistributionsJson.push(...newData);
+            
+            initializeMap();
+          }
+        } catch (error) {
+            console.log("There was a problem retrieving taxon distributions.")
         }
       };
 

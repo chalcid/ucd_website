@@ -23,7 +23,7 @@
     <div v-if="searchMode==='autocomplete'" class="col-12" ref="containerOfInputGroup">
       <div class="dropdown">
         <input type="text" v-model="searchTerm" @input="fetchAutocompleteResults" @select="handleSelection" @focus="showDropdown = true" />
-        <ul id="dropdown-menu" ref="autocompleteList" v-show="showDropdown">
+        <ul id="dropdown-menu" class="autocomplete-results" ref="autocompleteList" v-show="showDropdown">
           <li 
             v-for="result in autocompleteResults" 
             :key="result.id" 

@@ -15,6 +15,10 @@ a,
   text-align: center;
 }
 
+.autocomplete-results {
+  width: max-content;
+}
+
 #binomial-search-input, #associates-search-input {
   max-width: 25%;
   min-width: 20%;
@@ -39,6 +43,7 @@ a,
 
 .dropdown {
   position: relative;
+  width: fit-content;
 }
 
 .dropdown input:focus + .dropdown-menu {

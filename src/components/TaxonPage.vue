@@ -68,7 +68,7 @@
     </div>
     
     <div v-show="isTaxonIDChainPopulated" class="col-md-4" id="movingDiv">
-      <images v-if="taxonIDChain && taxonIDChain.length > 0" :ba-Prop="taxonIDChain" class="space-below"></images>
+      <!-- <images v-if="taxonIDChain && taxonIDChain.length > 0" :ba-Prop="taxonIDChain" class="space-below"></images> -->
       <div v-if="rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'"><taxon-distribution v-if="taxonIDChain && taxonIDChain.length > 0" :ba-Prop="taxonIDChain"></taxon-distribution></div>
     </div>
   </div>

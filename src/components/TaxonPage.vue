@@ -62,7 +62,7 @@
     </div>
     <references v-show="toggleTree === 'history'" v-if="nomenclaturalReferencesResults" :nr-Prop="nomenclaturalReferencesResults"></references>
     <div v-if="isTaxonIDChainPopulated">
-      <biological-associations v-if="taxonIDChain && taxonIDChain.length > 0" :ba-Prop="taxonIDChain"></biological-associations>
+      <biological-associations v-if="taxonIDChain && taxonIDChain.length > 0" :ba-Prop="taxonIDChain" :fa-Prop="familyName"></biological-associations>
     </div>
       <div v-else><img src="/spinning-circles.svg" alt="Loading..." width="75"></div>
     </div>
@@ -128,6 +128,11 @@ h3{
           return ['NomenclaturalRank::Iczn::GenusGroup::Genus', 'NomenclaturalRank::Iczn::GenusGroup::Subgenus', 'NomenclaturalRank::Iczn::SpeciesGroup::Species', 'NomenclaturalRank::Iczn::SpeciesGroup::Subspecies', 'NomenclaturalRank::Icn::GenusGroup::Genus', 'NomenclaturalRank::Icn::GenusGroup::Subgenus', 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species', 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Subspecies'].includes(rankString.value);
         };
         return false;
+      });
+      
+      const familyName = computed(() => {
+        const familyNameExtracted = reversedBreadcrumbs.value.find(item => item.rank_string === "NomenclaturalRank::Iczn::FamilyGroup::Family" || item.rank_string === "NomenclaturalRank::Icn::FamilyGroup::Family");
+        return familyNameExtracted ? familyNameExtracted.name : taxonViewed.value[0].cached;
       });
         
       const resultsExist = computed(() => route.query.taxonID !== undefined && route.query.taxonID !== null);
@@ -378,6 +383,7 @@ h3{
         downloadTSV,
         objectToTabDelimited,
         flattenObject,
+        familyName
       };
     }
   }

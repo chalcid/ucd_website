@@ -43,7 +43,7 @@
       });
       
       const adReferences = computed(() => {
-        let references = state.taxonDistributionsJson.flatMap(item => item.citations.map(citation => citation.source.name));
+        let references = state.taxonDistributionsJson.flatMap(item => item.citations.flatMap(citation => citation.source.name));
         return references.sort();
       });
       

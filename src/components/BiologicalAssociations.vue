@@ -11,7 +11,7 @@
         <div id="collapseBiologicalAssociations" v-show="showBiologicalAssociations">
           <div id = "showIfQuery" v-if="groupedBiologicalAssociations">
             <div v-for="(group, groupingFamily) in groupedBiologicalAssociations" :key="groupingFamily">
-              <h5 class="indent">{{ group[0] }}</h5>
+              <h5 class="indent">{{ group[0] ? group[0] : 'Others' }}</h5>
               <ul id="results-list-span">
                 <li id="sources-list-item" v-for="(association, index) in group[1]" :key="index" v-html="association.associationText"></li>
               </ul>
@@ -98,6 +98,9 @@
         }, []);
         
         associations.sort(([familyA,], [familyB,]) => {
+          if (!familyA && !familyB) return 0;
+          if (!familyA) return 1;
+          if (!familyB) return -1;
           return familyA.localeCompare(familyB);
         });
         

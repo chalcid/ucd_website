@@ -22,7 +22,7 @@
     </div>
     <references :bar-Prop="baReferences"></references>
   </div>
-  <div class="indent" v-else-if="sortedBiologicalAssociations.length === 0">No biological associations are databased for this taxon name.</div>
+  <div class="indent" v-else-if="emptyArray === true">No biological associations are databased for this taxon name.</div>
   <div v-else><img src="/spinning-circles.svg" alt="Loading..." width="75"></div>
 </template>
 
@@ -47,7 +47,8 @@
       const state = reactive({
         showBiologicalAssociations: true,
         biologicalAssociationsJson: [],
-        baReferences: []
+        baReferences: [],
+        emptyArray: false
       });
       
       const jsonToDownload = ref(null);
@@ -71,7 +72,11 @@
               association.object.family_name !== familyName.value ? association.object.family_name :
               association.subject.family_name !== familyName.value ? association.subject.family_name :
               familyName.value;
-            
+              
+            if (state.biologicalAssociationsJson.length === 0) {
+              state.emptyArray = true;
+            }
+              
             return {
               associationText: `${objectTag} is a ${relationship} of ${subject}, (${citation})`.replace("a associate", "an associate"),
               groupingFamily: groupingFamily,

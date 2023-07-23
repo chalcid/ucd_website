@@ -9,10 +9,13 @@
         </button>
         <button class="btn btn-outline-primary" id="outline-button" v-show="showBiologicalAssociations" @click="downloadJSON">download (JSON)</button>  <button class="btn btn-outline-primary" id="outline-button" v-show="showBiologicalAssociations" @click="downloadTSV">download (TSV)</button>
         <div id="collapseBiologicalAssociations" v-show="showBiologicalAssociations">
-          <div id = "showIfQuery" v-if="sortedBiologicalAssociations">
-            <ul id="results-list-span">
-              <li id="sources-list-item" v-for="object_tag in sortedBiologicalAssociations" :key="object_tag" v-html="object_tag"></li>
-            </ul>
+          <div id = "showIfQuery" v-if="groupedBiologicalAssociations">
+            <div v-for="(group, groupingFamily) in groupedBiologicalAssociations" :key="groupingFamily">
+              <h5 class="indent">{{ group[0] }}</h5>
+              <ul id="results-list-span">
+                <li id="sources-list-item" v-for="(association, index) in group[1]" :key="index" v-html="association.associationText"></li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -32,7 +35,8 @@
     name: 'BiologicalAssociations',
     
     props: {
-      baProp: Array
+      baProp: Array,
+      faProp: String
     },
     
     components: {
@@ -47,22 +51,61 @@
       });
       
       const jsonToDownload = ref(null);
+      const familyName = ref(props.faProp);
       
       const sortedBiologicalAssociations = computed(() => {
         return state.biologicalAssociationsJson
           .filter(association => association.biological_relationship.name !== "compared with")
           .filter(association => association.object.object_tag)
           .map(association => {
-            const citation = association.citations?.[0]?.citation_source_body || 'No citation';
+            const citation = association.citations?.length? association.citations
+              .map(citation => citation.citation_source_body)
+              .sort()
+              .join("; ")
+              : 'No citation';
             const objectTag = association.object.object_tag.replace(" &#10003;", "").replace(" &#10060;", "").replace(" [c]", "");
             const relationship = association.biological_relationship.object_label.toLowerCase();
+            const object = association.object.object_label;
             const subject = association.subject.object_tag.replace(" &#10003;", "").replace(" &#10060;", "").replace(" [c]", "");
-            return `${objectTag} is a ${relationship} of ${subject}, (${citation})`.replace("a associate", "an associate");
+            const groupingFamily = 
+              association.object.family_name !== familyName.value ? association.object.family_name :
+              association.subject.family_name !== familyName.value ? association.subject.family_name :
+              familyName.value;
+            
+            return {
+              associationText: `${objectTag} is a ${relationship} of ${subject}, (${citation})`.replace("a associate", "an associate"),
+              groupingFamily: groupingFamily,
+              objectName: object
+            }
           });
       });
       
+      const groupedBiologicalAssociations = computed(() => {
+        const associations = sortedBiologicalAssociations.value.reduce((group, association) => {
+          const groupingFamily = association.groupingFamily;
+          if (!group.some(item => item[0] === groupingFamily)) {
+            group.push([groupingFamily, []]);
+          }
+          group.find(item => item[0] === groupingFamily)[1].push(association);
+          
+          for (let i = 0; i < group.length; i++) {
+            group[i][1].sort((a, b) => {
+              return a.objectName.localeCompare(b.objectName);
+            });
+          }
+          
+          return group;
+        }, []);
+        
+        associations.sort(([familyA,], [familyB,]) => {
+          return familyA.localeCompare(familyB);
+        });
+        
+        return associations;
+      });
+      
       const baReferences = computed(() => {
-        const references = state.biologicalAssociationsJson.flatMap(item => item.citations.map(citation => citation.source.object_tag));
+        const references = state.biologicalAssociationsJson.flatMap(item => item.citations.flatMap(citation => citation.source.object_tag));
         jsonToDownload.value["Biological association references"] = references;
         return references.sort();
       });
@@ -78,7 +121,7 @@
         const baResponse = await api.get(`/biological_associations`,
           {params: {
             taxon_name_id: props.baProp,
-            extend: ["object", "subject", "biological_relationship", "taxonomy", "biological_relationship_types", "citations", "source"],
+            extend: ["object", "subject", "biological_relationship", "taxonomy", "biological_relationship_types", "citations", "source", "family_names"],
             per: "10000",
             descendants: "true",
             project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
@@ -148,7 +191,9 @@
         flattenObject,
         objectToTabDelimited,
         downloadTSV,
-        jsonToDownload
+        jsonToDownload,
+        familyName,
+        groupedBiologicalAssociations
       };
     }
   }

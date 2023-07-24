@@ -44,7 +44,7 @@
             <span v-show="!showSynonyms"> Show taxonomic history</span>
             <span v-show="showSynonyms"> Taxonomic history</span>
           </button>
-          <button class="btn btn-outline-primary" id="outline-button" v-show="showSynonyms" @click="downloadJSON">download (JSON)</button>  <button class="btn btn-outline-primary" id="outline-button" v-show="showSynonyms" @click="downloadTSV">download (TSV)</button> 
+          <button class="btn btn-outline-primary" id="outline-button" v-show="showSynonyms" @click="downloadJSON" title="Java Script Object Notation, well-structured format">download (JSON)</button>  <button class="btn btn-outline-primary" id="outline-button" v-show="showSynonyms" @click="downloadTSV" title="Tab Separated Values, simple format">download (TSV)</button> 
           <div id="collapseSynonyms" v-show="showSynonyms">
             <div id="showIfQuery" v-if="resultsExist">
               <ul v-if="synonymArray" id="results-list-span">

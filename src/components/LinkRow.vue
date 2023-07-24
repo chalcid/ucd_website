@@ -19,7 +19,7 @@
               <router-link :to ="{name: 'TaxonomicTree', query: {rootTaxonID: '455458', rootTaxonName: 'Chalcidoidea'}} " class="nav-link">Taxonomic Tree</router-link>
             </li>
             <li class="nav-item">
-              <router-link :to ="{name: 'SourcesSearch'} " class="nav-link">Search sources</router-link>
+              <router-link :to ="{name: 'SourcesSearch'} " class="nav-link">Search references</router-link>
             </li>
         </ul>
     </div>

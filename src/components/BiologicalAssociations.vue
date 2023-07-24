@@ -7,7 +7,7 @@
           <span v-show="!showBiologicalAssociations"> Show biological associations</span>
           <span v-show="showBiologicalAssociations"> Biological associations</span>
         </button>
-        <button class="btn btn-outline-primary" id="outline-button" v-show="showBiologicalAssociations" @click="downloadJSON">download (JSON)</button>  <button class="btn btn-outline-primary" id="outline-button" v-show="showBiologicalAssociations" @click="downloadTSV">download (TSV)</button>
+        <button class="btn btn-outline-primary" id="outline-button" v-show="showBiologicalAssociations" @click="downloadJSON" title="Java Script Object Notation, well-structured format">download (JSON)</button>  <button class="btn btn-outline-primary" id="outline-button" v-show="showBiologicalAssociations" @click="downloadTSV" title="Tab Separated Values, simple format">download (TSV)</button>
         <div id="collapseBiologicalAssociations" v-show="showBiologicalAssociations">
           <div id = "showIfQuery" v-if="groupedBiologicalAssociations">
             <div v-for="(group, groupingFamily) in groupedBiologicalAssociations" :key="groupingFamily">

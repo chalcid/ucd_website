@@ -1,5 +1,5 @@
 <template>
-  <div v-if="groupedSortedBiologicalAssociations.length">
+  <div v-if="sortedBiologicalAssociations[0]">
     <div class="row" ref="containerOfBiologicalAssociations" name="biologicalAssociationsContainer">
       <div class="col-12 bd-highlight align-items-start" id="biologicalAssociations-list-div" ref="biologicalAssociationsList">
         <button class="btn btn-link" type="button" @click="showBiologicalAssociations = !showBiologicalAssociations" aria-expanded="false">
@@ -9,8 +9,8 @@
         </button>
         <button class="btn btn-outline-primary" id="outline-button" v-show="showBiologicalAssociations" @click="downloadJSON" title="Java Script Object Notation, well-structured format">download (JSON)</button>  <button class="btn btn-outline-primary" id="outline-button" v-show="showBiologicalAssociations" @click="downloadTSV" title="Tab Separated Values, simple format">download (TSV)</button>
         <div id="collapseBiologicalAssociations" v-show="showBiologicalAssociations">
-          <div id = "showIfQuery" v-if="groupedSortedBiologicalAssociations">
-            <div v-for="(group, groupingFamily) in groupedSortedBiologicalAssociations" :key="groupingFamily">
+          <div id = "showIfQuery" v-if="groupedBiologicalAssociations">
+            <div v-for="(group, groupingFamily) in groupedBiologicalAssociations" :key="groupingFamily">
               <h5 class="indent">{{ group[0] ? group[0] : 'Others' }}</h5>
               <ul id="results-list-span">
                 <li id="sources-list-item" v-for="(association, index) in group[1]" :key="index" v-html="association.associationText"></li>
@@ -23,13 +23,11 @@
     <references :bar-Prop="baReferences"></references>
   </div>
   <div class="indent" v-else-if="emptyArray === true">No biological associations are databased for this taxon name.</div>
-  <div class="indent, space-above" v-else>Please wait for biological associations to load
-    <div><img src="/spinning-circles.svg" alt="Loading..." width="75"></div>
-  </div>
+  <div v-else><img src="/spinning-circles.svg" alt="Loading..." width="75"></div>
 </template>
 
 <script>
-  import { reactive, toRefs, ref, onMounted, nextTick } from 'vue'
+  import { computed, reactive, ref, toRefs, onMounted, nextTick } from 'vue'
   import api from '/api.js'
   import References from './References.vue';
 
@@ -48,16 +46,78 @@
     setup(props) {
       const state = reactive({
         showBiologicalAssociations: true,
+        biologicalAssociationsJson: [],
+        baReferences: [],
         emptyArray: false
       });
       
-      const biologicalAssociationsJson = ref([]);
-      const baReferences = ref([]);
       const jsonToDownload = ref(null);
-      const groupedSortedBiologicalAssociations = ref([]);
-      const familyName = ref('');
+      const familyName = ref(props.faProp);
+      
+      const sortedBiologicalAssociations = computed(() => {
+        return state.biologicalAssociationsJson
+          .filter(association => association.biological_relationship.name !== "compared with")
+          .filter(association => association.object.object_tag)
+          .map(association => {
+            const citation = association.citations?.length? association.citations
+              .map(citation => citation.citation_source_body)
+              .sort()
+              .join("; ")
+              : 'No citation';
+            const objectTag = association.object.object_tag.replace(" &#10003;", "").replace(" &#10060;", "").replace(" [c]", "");
+            const relationship = association.biological_relationship.object_label.toLowerCase();
+            const object = association.object.object_label;
+            const subject = association.subject.object_tag.replace(" &#10003;", "").replace(" &#10060;", "").replace(" [c]", "");
+            const groupingFamily = 
+              association.object.family_name !== familyName.value ? association.object.family_name :
+              association.subject.family_name !== familyName.value ? association.subject.family_name :
+              familyName.value;
+              
+            return {
+              associationText: `${objectTag} is a ${relationship} of ${subject}, (${citation})`.replace("a associate", "an associate"),
+              groupingFamily: groupingFamily,
+              objectName: object
+            }
+          });
+      });
+      
+      const groupedBiologicalAssociations = computed(() => {
+        if (sortedBiologicalAssociations.value.length === 0) {
+              state.emptyArray = true;
+        }
+        const associations = sortedBiologicalAssociations.value.reduce((group, association) => {
+          const groupingFamily = association.groupingFamily;
+          if (!group.some(item => item[0] === groupingFamily)) {
+            group.push([groupingFamily, []]);
+          }
+          group.find(item => item[0] === groupingFamily)[1].push(association);
           
-      onMounted(async () => {
+          for (let i = 0; i < group.length; i++) {
+            group[i][1].sort((a, b) => {
+              return a.objectName.localeCompare(b.objectName);
+            });
+          }
+          
+          return group;
+        }, []);
+        
+        associations.sort(([familyA,], [familyB,]) => {
+          if (!familyA && !familyB) return 0;
+          if (!familyA) return 1;
+          if (!familyB) return -1;
+          return familyA.localeCompare(familyB);
+        });
+        
+        return associations;
+      });
+      
+      const baReferences = computed(() => {
+        const references = state.biologicalAssociationsJson.flatMap(item => item.citations.flatMap(citation => citation.source.object_tag));
+        jsonToDownload.value["Biological association references"] = references;
+        return references.sort();
+      });
+      
+      onMounted(async () => { 
         nextTick();
         
         jsonToDownload.value = {
@@ -74,37 +134,9 @@
             project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
           }}
         );
-        
-        biologicalAssociationsJson.value = await baResponse.data;
-                
-        const references = biologicalAssociationsJson.value.flatMap(item => item.citations.flatMap(citation => citation.source.object_tag));
-        baReferences.value = references.sort();
-        jsonToDownload.value["Biological association data"] = biologicalAssociationsJson.value;
-        jsonToDownload.value["Biological association references"] = references;
-        
-        familyName.value = props.faProp;
-        
-        if (window.Worker && biologicalAssociationsJson.value.length > 0){
-          const plainBaJSON = JSON.parse(JSON.stringify(biologicalAssociationsJson.value));
-          
-          const workerData = {
-            plainBaJSON: plainBaJSON,
-            familyName: familyName.value
-          };
-          
-          const worker = new Worker('./src/biologicalAssociationsWorker.js');
-          worker.postMessage(workerData);
-          
-          worker.addEventListener('message', event => {
-            groupedSortedBiologicalAssociations.value = event.data;
-          });
-        }
-        else if(groupedSortedBiologicalAssociations.value.length === 0) {
-            state.emptyArray = true;
-        }
-        else {
-          console.log("This browser does not support web workers, and therefore biological associations will not group (or even display at this stage).")
-        }
+        const newData = await baResponse.data;
+        state.biologicalAssociationsJson = await newData;
+        jsonToDownload.value["Biological association data"] = state.biologicalAssociationsJson;
       });
       
       const downloadJSON = () => {
@@ -144,7 +176,7 @@
         return tsvData.join('\r\n');
       };
       
-      const downloadTSV = () => {      
+      const downloadTSV = () => {
         const flatObject = flattenObject(jsonToDownload.value);
         const tsvData = objectToTabDelimited(flatObject);
                 
@@ -160,15 +192,15 @@
       
       return { 
         ...toRefs(state),
+        sortedBiologicalAssociations,
         baReferences,
         downloadJSON,
         flattenObject,
         objectToTabDelimited,
         downloadTSV,
         jsonToDownload,
-        biologicalAssociationsJson,
-        groupedSortedBiologicalAssociations,
-        familyName
+        familyName,
+        groupedBiologicalAssociations
       };
     }
   }

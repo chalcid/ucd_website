@@ -92,7 +92,7 @@
             familyName: familyName.value
           };
           
-          const worker = new Worker('./src/scripts/biologicalAssociationsWorker.js');
+          const worker = new Worker('./src/biologicalAssociationsWorker.js');
           worker.postMessage(workerData);
           
           worker.addEventListener('message', event => {

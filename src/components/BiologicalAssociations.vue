@@ -22,12 +22,12 @@
     </div>
     <references :bar-Prop="baReferences"></references>
   </div>
-  <div class="indent" v-else-if="emptyArray === true">No biological associations are databased for this taxon name.</div>
+  <div class="indent" v-else-if="emptyArray === true"></div>
   <div v-else><img src="/spinning-circles.svg" alt="Loading..." width="75"></div>
 </template>
 
 <script>
-  import { computed, reactive, ref, toRefs, onMounted, nextTick } from 'vue'
+  import { computed, reactive, ref, toRefs, onMounted } from 'vue'
   import api from '/api.js'
   import References from './References.vue';
 
@@ -117,9 +117,7 @@
         return references.sort();
       });
       
-      onMounted(async () => { 
-        nextTick();
-        
+      onMounted(async () => {         
         jsonToDownload.value = {
           "Biological association data": [],
           "Biological association references": []

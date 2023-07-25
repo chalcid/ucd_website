@@ -48,7 +48,6 @@
       });
       
       onMounted(async () => {
-        nextTick();
         await fetchTaxonDistributions();
       });
 

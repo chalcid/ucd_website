@@ -13,7 +13,7 @@
         <li id="results-list-item" class="space-below"
           v-for="(sourceItem, index) in soProp" 
             :key="sourceItem.id">
-            <span v-html="soProp[index].cached"></span> <a class="normal-links" @click="copyBibtex(soProp[index].bibtex)">copy bibtex</a>
+            <span v-html="soProp[index].cached"></span> <a title="Bibtex format for importing into reference management software" class="normal-links" @click="copyBibtex(soProp[index].bibtex)">copy bibtex</a>
         </li>
       </ul>
       <span v-else>No search results have been returned yet.</span>

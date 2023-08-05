@@ -60,7 +60,10 @@
       const router = useRouter();
       
       const useInputTerms = async () => {
-        try { 
+        try {
+          if(state.author.length > 0) {
+            state.author = state.author.replace(/\./g, "");
+          }
           if(state.author && state.year && state.title){
             const response = await api.get(`/sources`,
               {params: {

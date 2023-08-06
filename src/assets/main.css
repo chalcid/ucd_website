@@ -189,10 +189,11 @@ a,
   background-color: #ffffff;
   width: 19px;
   height: 19px;
-  line-height: 12px;
-  text-align: center;
   border: 1px solid black;
   font-size: small;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #treeButton:hover {

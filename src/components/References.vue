@@ -13,7 +13,7 @@
       <div id="collapseReferences" v-show="showReferences">
         <div id = "showIfQuery" v-if="nrProp || barProp || adProp">
           <ul id="results-list-span">
-            <li id="results-list-item" v-show="nrProp" v-for="object_tag in sortedReferences" :key="object_tag" v-html="object_tag"></li>
+            <li id="results-list-item" v-show="nrProp" v-for="object_tag in sortedReferences" :key="object_tag" v-html="object_tag.cached"></li>
             <li id="results-list-item" v-show="barProp" v-for="object_tag in sortedReferences" :key="object_tag" v-html="object_tag"></li>
             <li id="results-list-item" v-show="adProp" v-for="name in sortedReferences" :key="name" v-html="name"></li>
           </ul>

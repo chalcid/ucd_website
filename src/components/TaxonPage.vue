@@ -69,7 +69,7 @@
     
     <div v-show="isTaxonIDChainPopulated" class="col-md-4" id="movingDiv">
       <!-- <images v-if="taxonIDChain && taxonIDChain.length > 0" :ba-Prop="taxonIDChain" class="space-below"></images> -->
-      <div v-if="rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'"><taxon-distribution v-if="taxonIDChain && taxonIDChain.length > 0" :ba-Prop="taxonIDChain"></taxon-distribution></div>
+      <div v-if="rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'"><taxon-distribution v-if="taxonIDChain && taxonIDChain.length > 0" :ba-Prop="taxonIDChain" :otu-Prop="otu" ></taxon-distribution></div>
     </div>
   </div>
 </template>
@@ -120,6 +120,7 @@ h3{
       const isTaxonIDChainPopulated = ref(false);
       const taxonIDChain =  ref([]);
       const jsonToDownload = ref(null);
+      const otu = ref('');
       
       const nomenclaturalReferencesResults = computed(() => synonymArray.value.sources);
       
@@ -185,10 +186,10 @@ h3{
                 extend: ['ancestor_ids'],
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
             }}),
-            api.get(`/taxon_names/`,
+            api.get(`/taxon_names/` + taxonID,
                     {params: {
-                      taxon_name_id: taxonID,
                       validify: true,
+                      extend: ["otus"],
                       project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
             }})
           ]);
@@ -197,6 +198,7 @@ h3{
           const synonyms = await relationshipsResponse.data;
           const breadcrumbsData = await breadcrumbs.data;
           state.validified = await validify.data;
+          otu.value = state.validified.otus[0].id.toString();
           if (!rankString.value) {
             rankString.value = state.validified[0].rank_string;
             taxonViewed.value[0].cached_author_year = taxonViewed.value[0].cached_author_year.replace(/\(|\)/g, "");
@@ -383,7 +385,8 @@ h3{
         downloadTSV,
         objectToTabDelimited,
         flattenObject,
-        familyName
+        familyName,
+        otu
       };
     }
   }

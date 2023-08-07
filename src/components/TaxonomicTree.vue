@@ -8,7 +8,7 @@
         <span v-show="!openTaxa[firstDown.id] === true">+</span>
       </button>
       <a @click="displayTaxonPage(firstDown.id)" id="higherTaxon">
-        <span v-if="firstDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || firstDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'">
+        <span v-if="firstDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || firstDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || firstDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Subgenus'">
           <i>{{ firstDown.name }}</i>
         </span>
         <span v-else>
@@ -22,7 +22,7 @@
             <span v-show="!openTaxa[secondDown.id] === true">+</span>
           </button>
           <a @click="displayTaxonPage(secondDown.id), nothingClicked = !nothingClicked" class="normal-links" id="higherTaxon">
-            <span v-if="secondDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || secondDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'">
+            <span v-if="secondDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || secondDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || firstDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Subgenus'">
               <i>{{ secondDown.name }}</i>
             </span>
             <span v-else>
@@ -36,7 +36,7 @@
                 <span v-show="!openTaxa[thirdDown.id] === true">+</span>
               </button>
               <a @click="displayTaxonPage(thirdDown.id), nothingClicked = !nothingClicked" class="normal-links" id="higherTaxon">
-                <span v-if="thirdDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || thirdDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'">
+                <span v-if="thirdDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || thirdDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || firstDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Subgenus'">
                   <i> {{ thirdDown.name }} </i>
                 </span>
                 <span v-else>
@@ -50,7 +50,7 @@
                     <span v-show="!openTaxa[fourthDown.id] === true">+</span>
                   </button>
                   <a @click="displayTaxonPage(fourthDown.id), nothingClicked = !nothingClicked" id="species">
-                    <span v-if="fourthDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || fourthDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'">
+                    <span v-if="fourthDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || fourthDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || firstDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Subgenus'">
                       <i> {{ fourthDown.name }} </i>
                     </span>
                     <span v-else>
@@ -60,7 +60,7 @@
                   <ul v-show="openTaxa[fourthDown.id] === true && fourthDown.children">
                     <li v-for="fifthDown in fourthDown.children" :key="fifthDown.id">
                       <a @click="displayTaxonPage(fifthDown.id), nothingClicked = !nothingClicked" id="species" class="padding-left-twenty">
-                        <span v-if="fifthDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || fifthDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'">
+                        <span v-if="fifthDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || fifthDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || firstDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Subgenus'">
                           <i> {{ fifthDown.name }} </i>
                         </span>
                         <span v-else>

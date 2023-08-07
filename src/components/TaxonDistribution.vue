@@ -18,7 +18,8 @@
     name: 'TaxonDistributions',
 
     props: {
-      baProp: Array
+      baProp: Array,
+      otuProp: String
     },
     
     components: {
@@ -30,25 +31,29 @@
       
       const state = reactive({
         isLoading: true,
-        taxonDistributionsJson: [],
         showTaxonDistributions: true
       });
+      
+      const taxonDistributionsJson = ref([]);
+      const taxonMap = ref([]);
 
       const sortedTaxonDistributions = computed(() => {
         const uniqueCountries = new Set(
-          state.taxonDistributionsJson.map(item => item.geographic_area.name)
+          taxonDistributionsJson.value.map(item => item.geographic_area.name)
         );
 
         return Array.from(uniqueCountries).sort();
       });
       
       const adReferences = computed(() => {
-        let references = state.taxonDistributionsJson.flatMap(item => item.citations.flatMap(citation => citation.source.name));
+        let references = taxonDistributionsJson.value.flatMap(item => item.citations.flatMap(citation => citation.source.name));
         return references.sort();
       });
       
       onMounted(async () => {
-        await fetchTaxonDistributions();
+        if (props.baProp && props.baProp.length > 0) { 
+          await fetchTaxonDistributions();
+        };
       });
 
       const initializeMap = async () => {
@@ -71,20 +76,13 @@
           
           state.isLoading = false;
 
-          const geojsonArray = state.taxonDistributionsJson.map((item) => {
-            if (item.geographic_area.geo_json?.geometry) {
-              return item.geographic_area.geo_json.geometry;
-            }
-            return null;
-          });
-
           geoJsonLayer.clearLayers();
+          
+          const parsedGeoJson = JSON.parse(taxonMap.value);
 
-          geojsonArray.forEach((item) => {
-            if (item) {
-              geoJsonLayer.addData(item);
-            }
-          });
+          if (taxonMap.value.length > 0) {
+            geoJsonLayer.addData(parsedGeoJson);
+          }
         } catch (error) {
           console.log("Reload if you do not see the map. The map sent this error message, although map errors do not seem to be fatal in many cases: " + error.message)
         };
@@ -92,26 +90,28 @@
 
       const fetchTaxonDistributions = async () => {
         try {
-          if (props.baProp && props.baProp.length > 0) {
-            const tdResponse = await api.get(`/asserted_distributions?`,
+          const combinedDistributionPromise = Promise.all ([
+            api.get(`/asserted_distributions?`,
               {params: {
                 taxon_name_id: props.baProp,
-                embed: ["shape"],
-                extend: ["geographic_area", "citations", "geo_json"],
+                extend: ["geographic_area", "citations"],
                 per: "10000",
                 descendants: "true",
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
-              }}                                 
-            );
-            const newData = tdResponse.data;
-            state.taxonDistributionsJson.length = 0;
-            state.taxonDistributionsJson.push(...newData);
+            }}),
+            api.get(`/otus/` + props.otuProp + `/inventory/distribution` ,
+              {params: {
+                project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
+            }})  
+          ]);
+          const [tdResponse, cachedMapResponse] = await combinedDistributionPromise;
+          taxonDistributionsJson.value = tdResponse.data;
+          taxonMap.value = cachedMapResponse.data.cached_map.geo_json;
             
-            initializeMap();
-          }
+          initializeMap();
         } catch (error) {
             console.log("There was a problem retrieving taxon distributions.")
-        }
+        };
       };
 
       return {
@@ -120,7 +120,9 @@
         map,
         initializeMap,
         fetchTaxonDistributions,
-        adReferences
+        adReferences,
+        taxonDistributionsJson,
+        taxonMap
       };
     }
   };

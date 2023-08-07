@@ -69,8 +69,8 @@
             const object = association.object.object_label;
             const subject = association.subject.object_tag.replace(" &#10003;", "").replace(" &#10060;", "").replace(" [c]", "");
             const groupingFamily = 
-              association.object.family_name !== familyName.value ? association.object.family_name :
-              association.subject.family_name !== familyName.value ? association.subject.family_name :
+              association.object.family_name !== familyName.value ? association.object.taxonomy.family :
+              association.subject.family_name !== familyName.value ? association.subject.taxonomy.family :
               familyName.value;
               
             return {
@@ -126,7 +126,7 @@
         const baResponse = await api.get(`/biological_associations`,
           {params: {
             taxon_name_id: props.baProp,
-            extend: ["object", "subject", "biological_relationship", "taxonomy", "biological_relationship_types", "citations", "source", "family_names"],
+            extend: ["object", "subject", "biological_relationship", "taxonomy", "biological_relationship_types", "citations", "source"],
             per: "10000",
             descendants: "true",
             project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,

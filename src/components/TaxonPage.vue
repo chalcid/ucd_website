@@ -62,7 +62,7 @@
     </div>
     <references v-show="toggleTree === 'history'" v-if="nomenclaturalReferencesResults" :nr-Prop="nomenclaturalReferencesResults"></references>
     <div v-if="isTaxonIDChainPopulated">
-      <biological-associations v-if="taxonIDChain && taxonIDChain.length > 0 && (rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species')" :ba-Prop="taxonIDChain" :fa-Prop="familyName"></biological-associations>
+      <biological-associations v-if="taxonIDChain && taxonIDChain.length > 0 && (rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || rankString === 'NomenclaturalRank::Icn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species')" :ba-Prop="taxonIDChain" :fa-Prop="familyName"></biological-associations>
     </div>
       <div v-else><img src="/spinning-circles.svg" alt="Loading..." width="75"></div>
     </div>
@@ -187,10 +187,10 @@ h3{
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
             }}),
             api.get(`/taxon_names/` + taxonID,
-                    {params: {
-                      validify: true,
-                      extend: ["otus"],
-                      project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
+              {params: {
+                validify: true,
+                extend: ["otus"],
+                project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
             }})
           ]);
           const [combinationsResponse, relationshipsResponse, breadcrumbs, validify] = await combinedTaxonPromise;

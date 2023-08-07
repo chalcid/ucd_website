@@ -69,8 +69,8 @@
             const object = association.object.object_label;
             const subject = association.subject.object_tag.replace(" &#10003;", "").replace(" &#10060;", "").replace(" [c]", "");
             const groupingFamily = 
-              association.object.family_name !== familyName.value ? association.object.taxonomy.family :
-              association.subject.family_name !== familyName.value ? association.subject.taxonomy.family :
+              association.object.taxonomy.family !== familyName.value ? association.object.taxonomy.family :
+              association.subject.taxonomy.family !== familyName.value ? association.subject.taxonomy.family :
               familyName.value;
               
             return {

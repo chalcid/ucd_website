@@ -72,8 +72,8 @@
           state.isLoading = false;
 
           const geojsonArray = state.taxonDistributionsJson.map((item) => {
-            if (item.geographic_area.shape?.geometry) {
-              return item.geographic_area.shape.geometry;
+            if (item.geographic_area.geo_json?.geometry) {
+              return item.geographic_area.geo_json.geometry;
             }
             return null;
           });
@@ -97,8 +97,7 @@
               {params: {
                 taxon_name_id: props.baProp,
                 embed: ["shape"],
-                extend: ["geographic_area", "citations"],
-                geo_json: "true",
+                extend: ["geographic_area", "citations", "geo_json"],
                 per: "10000",
                 descendants: "true",
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,

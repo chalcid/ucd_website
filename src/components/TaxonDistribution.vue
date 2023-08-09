@@ -1,10 +1,10 @@
 <template>
   <div>
-    <span v-show="!isLoading" style="width: 600px; display:inline-block;">Distribution: {{ sortedTaxonDistributions.join(', ') }}</span>
-    <span v-show="isLoading">Please wait for the map to load...</span>
-    <div id="map" class="leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" style="width: 600px; height: 400px; position: relative; outline-style: none;"></div>
+    <span v-show="!hideMap" style="width: 600px; display:inline-block;">Distribution: {{ sortedTaxonDistributions.join(', ') }}</span>
+    <span v-show="isLoading && !hideMap">Please wait for the map to load...</span>
+    <div v-show="!hideMap" id="map" class="leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" style="width: 600px; height: 400px; position: relative; outline-style: none;"></div>
   </div>
-  <references :ad-Prop="adReferences"></references>
+  <references v-show="!hideMap" :ad-Prop="adReferences"></references>
 </template>
 
 <script>
@@ -31,6 +31,7 @@
       
       const state = reactive({
         isLoading: true,
+        hideMap: false,
         showTaxonDistributions: true
       });
       
@@ -107,10 +108,15 @@
           const [tdResponse, cachedMapResponse] = await combinedDistributionPromise;
           taxonDistributionsJson.value = tdResponse.data;
           taxonMap.value = cachedMapResponse.data.cached_map.geo_json;
+          
+          if (taxonMap.value.length === 0) {
+            state.hideMap = !state.hideMap;
+          }
             
           initializeMap();
         } catch (error) {
             console.log("There was a problem retrieving taxon distributions.")
+            state.hideMap = !state.hideMap;
         };
       };
 

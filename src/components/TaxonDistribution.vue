@@ -1,10 +1,10 @@
 <template>
-  <div v-if="sortedTaxonDistributions.length > 0">
+  <div>
     <span v-show="!isLoading" style="width: 600px; display:inline-block;">Distribution: {{ sortedTaxonDistributions.join(', ') }}</span>
     <span v-show="isLoading">Please wait for the map to load...</span>
     <div id="map" class="leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" style="width: 600px; height: 400px; position: relative; outline-style: none;"></div>
   </div>
-  <references :ad-Prop="adReferences" v-if="sortedTaxonDistributions.length > 0"></references>
+  <references :ad-Prop="adReferences"></references>
 </template>
 
 <script>
@@ -111,7 +111,6 @@
           initializeMap();
         } catch (error) {
             console.log("There was a problem retrieving taxon distributions.")
-            state.isLoading = false;
         };
       };
 

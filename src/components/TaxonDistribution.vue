@@ -92,7 +92,7 @@
       const fetchTaxonDistributions = async () => {
         try {
           const combinedDistributionPromise = Promise.all ([
-            api.get(`/asserted_distributions`,
+            api.get(`/asserted_distributions?`,
               {params: {
                 taxon_name_id: props.baProp,
                 extend: ["geographic_area", "citations"],

@@ -31,7 +31,7 @@
     <p><strong>Curators</strong>: John Noyes was responsible for the enormous task of developing and curating the UCD up to 2019. For this we have only great admiration and thanks. A new curatorial group is now responsible for updating the database post 2019. To be added as a curator of taxonomic or biological data, please contact:</p>
     
     <ul class="ul-home-page"><strong>List of Active Curators</strong>:
-      <li>Roger Burks (site designer) Newport Beach, CA, USA, burks.roger[at]gmail.com</li>
+      <li>Roger Burks Jr. (site designer) Newport Beach, CA, USA, burks.roger[at]gmail.com</li>
       <li>Lucian Fusu, 'Al. I. Cuza' University, Iasi, Romania</li>
       <li>D. Christopher Darling, Royal Ontario Museum, Toronto, ON, Canada</li>
       <li>John Heraty, University of California, Riverside, CA, USA</li>

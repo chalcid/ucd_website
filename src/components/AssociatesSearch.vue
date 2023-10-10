@@ -22,7 +22,7 @@
     </div>
     <div v-if="searchMode==='autocomplete'" class="col-12" ref="containerOfInputGroup">
       <div class="dropdown">
-        <input type="text" v-model="searchTerm" @input="fetchAutocompleteResults" @select="handleSelection" @focus="showDropdown = true" />
+        <input type="text" v-model="searchTerm" @input="debouncedAutocomplete" @select="handleSelection" @focus="showDropdown = true" />
         <ul id="dropdown-menu" class="autocomplete-results" ref="autocompleteList" v-show="showDropdown">
           <li 
             v-for="result in autocompleteResults" 
@@ -43,6 +43,7 @@
   import { useRouter } from 'vue-router'
   import { toRefs } from '@vue/reactivity'
   import SearchResults from './SearchResults.vue'
+  import debounce from 'lodash/debounce'
 
   export default {
     name: 'AssociatesSearch',
@@ -83,6 +84,8 @@
           console.error(error.stack)
         }
       };
+      
+      const debouncedAutocomplete = debounce(fetchAutocompleteResults, 300);
       
       const useInputTerms = async () => {
         try { 
@@ -183,7 +186,8 @@
         displayAutocompleteTaxonPage,
         sortResponse,
         formatResult,
-        handleSelection
+        handleSelection,
+        debouncedAutocomplete
       };
     }
   }

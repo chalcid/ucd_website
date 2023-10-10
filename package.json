@@ -15,9 +15,11 @@
         "axios": "^1.1.2",
         "bootstrap": "^5.2.2",
         "bootstrap-vue": "^2.22.0",
+        "debounce": "^1.2.1",
         "leaflet": "^1.9.4",
         "leaflet-geosearch": "^3.8.0",
         "leaflet-providers": "^1.13.0",
+        "lodash": "^4.17.21",
         "vue": "^3.2.40",
         "vue-router": "^4.1.6"
     },

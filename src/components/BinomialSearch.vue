@@ -89,7 +89,7 @@
         }
       };
       
-      const debouncedAutocomplete = debounce(fetchAutocompleteResults, 300);
+      const debouncedAutocomplete = debounce(fetchAutocompleteResults, 500);
       
       const useInputTerms = async () => {
         try { 
@@ -103,6 +103,7 @@
                   rank: 'NomenclaturalRank::Iczn::SpeciesGroup::Species',
                   validity: 'true',
                   exact: 'true',
+                  per: '1000',
                   project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
                 }})
               state.apiResults = response.data
@@ -116,6 +117,7 @@
                     name: state.genus,
                     rank: 'NomenclaturalRank::Iczn::GenusGroup::Genus',
                     validity: 'true',
+                    per: '1000',
                     project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
                   }}),
                 api.get(`/taxon_names`,
@@ -123,6 +125,7 @@
                     name: state.genus,
                     rank: 'NomenclaturalRank::Iczn::SpeciesGroup::Species',
                     validity: 'true',
+                    per: '1000',
                     project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
                   }}),
               ]);
@@ -138,6 +141,7 @@
                   name: state.species,
                   rank: 'NomenclaturalRank::Iczn::SpeciesGroup::Species',
                   validity: 'true',
+                  per: '1000',
                   project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
                 }})
               state.apiResults = response.data;
@@ -149,6 +153,7 @@
                 {params: {
                   name: state.family,
                   rank: ['NomenclaturalRank::Iczn::FamilyGroup::Family','NomenclaturalRank::Iczn::FamilyGroup::Subfamily','NomenclaturalRank::Iczn::FamilyGroup::Tribe','NomenclaturalRank::Iczn::FamilyGroup::Subtribe','NomenclaturalRank::Iczn::FamilyGroup::Superfamily'],
+                  per: '1000',
                   project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
                 }})
               state.apiResults = response.data;

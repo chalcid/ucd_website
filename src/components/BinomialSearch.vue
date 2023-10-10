@@ -13,7 +13,7 @@
     </fieldset>
     <div v-if="searchMode === 'autocomplete'" class="col-12">
       <div class="dropdown">
-        <input type="text" v-model="searchTerm" @input="fetchAutocompleteResults" @select="handleSelection" @focus="showDropdown = true" />
+        <input type="text" v-model="searchTerm" @input="debouncedAutocomplete" @select="handleSelection" @focus="showDropdown = true" />
         <ul id="dropdown-menu" class="autocomplete-results" ref="autocompleteList" v-show="showDropdown">
           <li 
             v-for="result in autocompleteResults" 
@@ -46,6 +46,7 @@
   import { useRouter } from 'vue-router'
   import { toRefs } from '@vue/reactivity'
   import SearchResults from './SearchResults.vue'
+  import debounce from 'lodash/debounce'
 
   export default {
     name: 'BinomialSearch',
@@ -82,11 +83,13 @@
               project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
               term: state.searchTerm
             }})
-          state.autocompleteResults = response.data
+          state.autocompleteResults = await response.data
         } catch (error) {
           console.error(`An error occurred when using the nomenclatural search component: ${error.message}`)
         }
       };
+      
+      const debouncedAutocomplete = debounce(fetchAutocompleteResults, 300);
       
       const useInputTerms = async () => {
         try { 
@@ -193,7 +196,8 @@
         useInputTerms,
         displayAutocompleteTaxonPage,
         sortResponse,
-        formatResult
+        formatResult,
+        debouncedAutocomplete
       };
     }
   }

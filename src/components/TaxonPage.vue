@@ -3,8 +3,8 @@
     <span 
       v-for="(breadcrumb, index) in reversedBreadcrumbs"
         :key="breadcrumb.id"
-        :class="{ italicizeBreadcrumb: breadcrumb.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || breadcrumb.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || breadcrumb.rank_string === 'NomenclaturalRank::Icn::GenusGroup::Genus' || breadcrumb.rank_string === 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species' }">
-        <router-link :to="{ name: 'TaxonPage', query: { taxonID: breadcrumb.id }}" v-if="breadcrumb.rank_string === 'NomenclaturalRank::Iczn::FamilyGroup::Family' || breadcrumb.rank_string === 'NomenclaturalRank::Iczn::FamilyGroup::Subfamily' || breadcrumb.rank_string === 'NomenclaturalRank::Iczn::FamilyGroup::Tribe' || breadcrumb.rank_string === 'NomenclaturalRank::Iczn::FamilyGroup::Subtribe' || breadcrumb.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || breadcrumb.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || breadcrumb.rank_string === 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species' || breadcrumb.rank_string === 'NomenclaturalRank::Icn::GenusGroup::Genus'">
+        :class="{ italicizeBreadcrumb: breadcrumb.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || breadcrumb.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Subgenus' || breadcrumb.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || breadcrumb.rank_string === 'NomenclaturalRank::Icn::GenusGroup::Genus' || breadcrumb.rank_string === 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species' }">
+        <router-link :to="{ name: 'TaxonPage', query: { taxonID: breadcrumb.id }}" v-if="breadcrumb.rank_string === 'NomenclaturalRank::Iczn::FamilyGroup::Family' || breadcrumb.rank_string === 'NomenclaturalRank::Iczn::FamilyGroup::Subfamily' || breadcrumb.rank_string === 'NomenclaturalRank::Iczn::FamilyGroup::Tribe' || breadcrumb.rank_string === 'NomenclaturalRank::Iczn::FamilyGroup::Subtribe' || breadcrumb.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || breadcrumb.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Subgenus' || breadcrumb.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || breadcrumb.rank_string === 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species' || breadcrumb.rank_string === 'NomenclaturalRank::Icn::GenusGroup::Genus'">
           {{ breadcrumb.name }}
         </router-link>
         <span v-else>
@@ -15,9 +15,18 @@
   </div>
   <div class="row">
     <div class="col-12">
-      <h3 v-if="italicized && taxonViewed[0] && taxonViewed[0].cached_is_valid===true"><i>{{ taxonViewed[0].cached }}</i> {{ taxonViewed[0].cached_author_year }}</h3>
-      <h3 v-else-if="italicized && taxonViewed[0] && taxonViewed[0].cached_is_valid===false"><i>{{ validified[0].cached_original_combination }}</i> {{ taxonViewed[0].cached_author_year }}</h3>
-      <h3 v-else-if="italicized && taxonViewed[0] && taxonViewed[0].cached_is_valid===false && validified[0]"><i>{{ validified[0].cached_original_combination }}</i> {{ taxonViewed[0].cached_author_year }}</h3>
+      <h3 v-if="italicized && taxonViewed[0] && taxonViewed[0].cached_is_valid===true">
+        <span v-if="taxonViewed[0].cached_html" v-html="cachedNameString"></span>
+        <span v-else><i>{{ taxonViewed[0].cached }}</i> {{ taxonViewed[0].cached_author_year }}</span>
+      </h3>
+      <h3 v-else-if="italicized && taxonViewed[0] && taxonViewed[0].cached_is_valid===false">
+        <span v-if="taxonViewed[0].cached_html" v-html="cachedNameString"></span>
+        <span v-else><i>{{ validified[0].cached_original_combination }}</i> {{ taxonViewed[0].cached_author_year }}</span>
+      </h3>
+      <h3 v-else-if="italicized && taxonViewed[0] && taxonViewed[0].cached_is_valid===false && validified[0]">
+        <span v-if="taxonViewed[0].cached_html" v-html="cachedNameString"></span>
+        <span v-else><i>{{ validified[0].cached_original_combination }}</i> {{ taxonViewed[0].cached_author_year }}</span>
+      </h3>
       <h3 v-else-if="taxonViewed[0] && taxonViewed[0].cached_is_valid===true">{{ taxonViewed[0].cached }} {{ taxonViewed[0].cached_author_year }}</h3>
       <h3 v-else-if="taxonViewed[0] && taxonViewed[0].cached_is_valid===false">{{ taxonViewed[0].cached }} {{ taxonViewed[0].cached_author_year }}</h3>
       <span v-else></span>
@@ -121,6 +130,7 @@ h3{
       const taxonIDChain =  ref([]);
       const jsonToDownload = ref(null);
       const otu = ref('');
+      const cachedNameString = ref('');
       
       const nomenclaturalReferencesResults = computed(() => synonymArray.value.sources);
       
@@ -153,13 +163,15 @@ h3{
         
         if (taxonViewed.value && taxonViewed.value[0] && taxonViewed.value[0].cached) {
           document.title = "UCD: " + taxonViewed.value[0].cached;
+          if(taxonViewed.value[0].cached_html && taxonViewed.value[0].cached_author_year)
+            cachedNameString.value = taxonViewed.value[0].cached_html + " " + taxonViewed.value[0].cached_author_year;
         };
         
         if(nomenclaturalReferencesResults){
           jsonToDownload.value["Nomenclature references"] = nomenclaturalReferencesResults.value;
         }
       });
-      
+            
       const getTaxon = async (taxonID) => {
         const response = await api.get(`/taxon_names`,
             {params: {
@@ -386,7 +398,8 @@ h3{
         objectToTabDelimited,
         flattenObject,
         familyName,
-        otu
+        otu,
+        cachedNameString
       };
     }
   }

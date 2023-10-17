@@ -35,8 +35,9 @@
     name: 'BiologicalAssociations',
     
     props: {
-      baProp: Array,
-      faProp: String
+      baProp: String,
+      faProp: String,
+      tidProp: Array
     },
     
     components: {
@@ -123,7 +124,7 @@
           "Biological association references": []
         };
         
-        const baResponse = await api.get(`/biological_associations`,
+        var baResponse = await api.get(`/biological_associations`,
           {params: {
             taxon_name_id: props.baProp,
             extend: ["object", "subject", "biological_relationship", "taxonomy", "biological_relationship_types", "citations", "source"],
@@ -132,6 +133,19 @@
             project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
           }}
         );
+        if(!baResponse.data[0]){
+          console.log("baResponse.data.length = " & baResponse.data.length);
+          baResponse = [];
+          baResponse = await api.get(`/biological_associations`,
+            {params: {
+              taxon_name_id: props.tidProp,
+              extend: ["object", "subject", "biological_relationship", "taxonomy", "biological_relationship_types", "citations", "source"],
+              per: "10000",
+              descendants: "true",
+              project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
+            }}
+          );
+        }
         const newData = await baResponse.data;
         state.biologicalAssociationsJson = await newData;
         jsonToDownload.value["Biological association data"] = state.biologicalAssociationsJson;

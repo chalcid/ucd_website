@@ -71,7 +71,7 @@
     </div>
     <references v-show="toggleTree === 'history'" v-if="nomenclaturalReferencesResults" :nr-Prop="nomenclaturalReferencesResults"></references>
     <div v-if="isTaxonIDChainPopulated">
-      <biological-associations v-if="taxonIDChain && taxonIDChain.length > 0 && (rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || rankString === 'NomenclaturalRank::Icn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species')" :ba-Prop="route.query.taxonID" :fa-Prop="familyName"></biological-associations>
+      <biological-associations v-if="taxonIDChain && taxonIDChain.length > 0 && (rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || rankString === 'NomenclaturalRank::Icn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species')" :ba-Prop="route.query.taxonID" :fa-Prop="familyName" :tid-prop="taxonIDChain"></biological-associations>
     </div>
       <div v-else><img src="/spinning-circles.svg" alt="Loading..." width="75"></div>
     </div>

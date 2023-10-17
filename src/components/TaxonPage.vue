@@ -214,7 +214,7 @@ h3{
           if (!rankString.value) {
             rankString.value = state.validified.rank_string;
             taxonViewed.value[0].cached_author_year = taxonViewed.value[0].cached_author_year.replace(/\(|\)/g, "");
-            cachedNameString = validified.cached_html & " " & taxonViewed[0].cached_author_year;
+            cachedNameString.value = state.validified.cached_html & " " & state.validified.cached_author_year;
           };
           
           jsonToDownload.value["Nomenclature data"]["Taxon viewed"] = taxonViewed.value;

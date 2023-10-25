@@ -18,9 +18,9 @@
     <h1>Universal Chalcidoidea Database</h1>
     <p><strong>About chalcids</strong>: Described as "gem-like inhabitants of the woodlands by most never seen nor dreamt of", chalcidoids include some of the most beautiful insects on the planet, but are amongst some of the most poorly known. They exhibit amazingly diverse life histories and profoundly influence all types of ecosytems, from rainforests to agriculture. Many species are natural enemies of insect pests and are used instead of pesticides to control them. As many as half a million species may exist, but only about 22,000 are documented, largely because chalcidoids are small to minute in size. The group includes the world's smallest adult insect, the degenerate male of <router-link :to="{ path: '/taxon', query: { taxonID: 471092 }}"><i>Dicopomorpha echmepterygis</i></router-link>, which is only a staggering 0.13mm long.</p>
     
-    <p><strong>Citation for web version</strong>: Universal Chalcidoidea Database Curators. 2022. Universal Chalcidoidea Database Web (UCDW) curated in TaxonWorks. www.ucd.chalcid.org. Accessed on [date].</p>
+    <p><strong>Citation for web version</strong>: UCD Community. 2023. Universal Chalcidoidea Database Website. https://ucd.chalcid.org. Accessed on [date].</p>
     
-    <p><strong>Citation for database</strong>: Universal Chalcidoidea Database Curators. 2022. Universal Chalcidoidea Database (UCD) curated in TaxonWorks. https://sfg.taxonworks.org/api/v1/. Accessed on [date].</p>
+    <p><strong>Citation for database</strong>: UCD Community. 2023. Universal Chalcidoidea Database (UCD) curated in TaxonWorks. https://sfg.taxonworks.org/api/v1/. Accessed on [date].</p>
     
     <p><strong>Why two citations?</strong> The UCDW is the public interface providing direct access to the curated data in the UCD Taxonworks interface. The UCD Taxonworks interface provides direct access to all of the data through a password protected interface. To get an overview of how the taxonworks interface works, we direct you to a series of video workshops starting with "1 TaxonWorks - The User Interface" (<a href="https://www.youtube.com/watch?v=SlaEhyLHkwk">https://www.youtube.com/watch?v=SlaEhyLHkwk</a>).</p>
     

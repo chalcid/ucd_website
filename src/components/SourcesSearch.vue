@@ -120,7 +120,7 @@
             const response = await api.get(`/sources`,
               {params: {
                 author: state.author,
-                in_project: true,
+//                in_project: true,
                 per: "10000",
                 extend: ['bibtex'],
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN

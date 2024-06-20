@@ -120,6 +120,7 @@
             const response = await api.get(`/sources`,
               {params: {
                 author: state.author,
+//                in_project: true,
                 per: "10000",
                 extend: ['bibtex'],
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
@@ -164,6 +165,7 @@
       };
       
       const sortResponse = () => {
+        //state.apiResults = state.apiResults.filter(item => item.source_in_project === true);
         state.sortedResponse = state.apiResults.sort((a, b) => {
           if (a.cached < b.cached) return -1
           if (a.cached > b.cached) return 1

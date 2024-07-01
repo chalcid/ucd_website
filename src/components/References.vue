@@ -10,10 +10,11 @@
         <span v-else-if="!showReferences && adProp"> Show distribution references</span>
         <span v-else-if="adProp"> Distribution references</span>
       </button>
+      <button class="btn btn-outline-primary" id="outline-button" v-show="showReferences" @click="downloadText" title="Download references as text">download (Text)</button>
       <div id="collapseReferences" v-show="showReferences">
         <div id = "showIfQuery" v-if="nrProp || barProp || adProp">
           <ul id="results-list-span">
-            <li id="results-list-item" v-show="nrProp" v-for="object_tag in sortedReferences" :key="object_tag" v-html="object_tag.cached"></li>
+            <li id="results-list-item" v-show="nrProp" v-for="object_tag in sortedReferences" :key="object_tag" v-html="object_tag"></li>
             <li id="results-list-item" v-show="barProp" v-for="object_tag in sortedReferences" :key="object_tag" v-html="object_tag"></li>
             <li id="results-list-item" v-show="adProp" v-for="name in sortedReferences" :key="name" v-html="name"></li>
           </ul>
@@ -33,14 +34,16 @@
     name: 'References',
     
     props: {
-      nrProp: Array,
+      adProp: Array,
       barProp: Array,
-      adProp: Array
+      nrProp: Array,
+      tnProp: String
     },
     
     setup(props) {
       const state = reactive({
-        showReferences: true
+        showReferences: true,
+        arrayInJson: [],
       });
       
       const sortedReferences = computed(() => {
@@ -62,9 +65,36 @@
         return uniqueReferences.sort();
       }
       
+      const referencesText = computed(() => {
+        return sortedReferences.value.join('\r\n');
+      });
+      
+      const downloadText = () => {
+        if (props.adProp) {
+          var filename = `${props.tnProp}_distribution_references.txt`;
+        }
+        else if (props.barProp) {
+          var filename = `${props.tnProp}_biological_association_references.txt`;
+        }
+        else if (props.nrProp){
+          var filename = `${props.tnProp}_nomenclature_references.txt`;
+        }
+        const text = referencesText.value;
+        const blob = new Blob([text], {type: 'text/plain'});
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.click();
+        
+        URL.revokeObjectURL(url);
+      }
+      
       return { 
         ...toRefs(state),
-        sortedReferences
+        sortedReferences,
+        downloadText,
+        referencesText
       };
     }
   }

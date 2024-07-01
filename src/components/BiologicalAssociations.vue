@@ -7,7 +7,7 @@
           <span v-show="!showBiologicalAssociations"> Show biological associations</span>
           <span v-show="showBiologicalAssociations"> Biological associations</span>
         </button>
-        <button class="btn btn-outline-primary" id="outline-button" v-show="showBiologicalAssociations" @click="downloadJSON" title="Java Script Object Notation, well-structured format">download (JSON)</button>  <button class="btn btn-outline-primary" id="outline-button" v-show="showBiologicalAssociations" @click="downloadTSV" title="Tab Separated Values, simple format">download (TSV)</button>
+        <button class="btn btn-outline-primary" id="outline-button" v-show="showBiologicalAssociations" @click="downloadJSON" title="Java Script Object Notation, well-structured format">download (JSON)</button>  <button class="btn btn-outline-primary" id="outline-button" v-show="showBiologicalAssociations" @click="downloadTSV('Biological association data')" title="Tab Separated Values, simple format">download (TSV)</button>
         <div id="collapseBiologicalAssociations" v-show="showBiologicalAssociations">
           <div id = "showIfQuery" v-if="groupedBiologicalAssociations">
             <div v-for="(group, groupingFamily) in groupedBiologicalAssociations" :key="groupingFamily">
@@ -20,7 +20,7 @@
         </div>
       </div>
     </div>
-    <references :bar-Prop="baReferences"></references>
+    <references :bar-Prop="baReferences" :tn-Prop="tnProp"></references>
   </div>
   <div class="indent" v-else-if="emptyArray === true"></div>
   <div v-else><img src="/spinning-circles.svg" alt="Loading..." width="75"></div>
@@ -37,7 +37,8 @@
     props: {
       baProp: String,
       faProp: String,
-      tidProp: Array
+      tidProp: Array,
+      tnProp: String
     },
     
     components: {
@@ -49,7 +50,8 @@
         showBiologicalAssociations: true,
         biologicalAssociationsJson: [],
         baReferences: [],
-        emptyArray: false
+        emptyArray: false,
+        arrayInJson: []
       });
       
       const jsonToDownload = ref(null);
@@ -162,53 +164,105 @@
         URL.revokeObjectURL(url);
       }
       
-      function flattenObject(ob) {
-        var toReturn = {};
-        
-        for (var i in ob) {
-            if (!ob.hasOwnProperty(i)) continue;
-            
-            if ((typeof ob[i]) == 'object' && ob[i] !== null) {
-                var flatObject = flattenObject(ob[i]);
-                for (var x in flatObject) {
-                    if (!flatObject.hasOwnProperty(x)) continue;
-                    
-                    toReturn[i + '.' + x] = flatObject[x];
-                }
+      //For tsv formation so that it's not cluttered:
+      const keysToExtract = [
+        'id', 
+        'biological_association_subject_id', 
+        'biological_association_object_id', 
+        'global_id', 
+        'biological_relationship.name', 
+        'biological_relationship.object_tag', 
+        'biological_relationship.object_label', 
+        'subject.id', 
+        'subject.object_label', 
+        'subject.taxonomy.kingdom', 
+        'subject.taxonomy.phylum', 
+        'subject.taxonomy.class', 
+        'subject.taxonomy.order', 
+        'subject.taxonomy.superfamily', 
+        'subject.taxonomy.family', 
+        'subject.taxonomy.subfamily', 
+        'subject.taxonomy.tribe', 
+        'subject.taxonomy.genus', 
+        'subject.taxonomy.species', 
+        'object.object_label', 
+        'object.taxonomy.kingdom', 
+        'object.taxonomy.family', 
+        'object.taxonomy.genus', 
+        'object.taxonomy.species'
+      ];
+      
+      function flattenObject(ob, parentKey = '', result = {}) {
+        for (var key in ob) {
+          if (ob.hasOwnProperty(key)) {
+            const newKey = parentKey ? `${parentKey}.${key}` : key;
+            if (typeof ob[key] === 'object' && ob[key] !== null && !Array.isArray(ob[key])) {
+              flattenObject(ob[key], newKey, result);
+            } else if (Array.isArray(ob[key])) {
+              if (ob[key].length === 2 && ob[key][0] === null) {
+                result[newKey] = ob[key][1];
+              } else {
+                result[newKey] = ob[key].join(',');
+              }
             } else {
-                toReturn[i] = ob[i];
+              result[newKey] = ob[key];
             }
+          }
         }
-        return toReturn;
-      };
-      
-      function objectToTabDelimited(obj) {
-        const fields = Object.keys(obj);
-        const tsvData = fields.map(fieldName => `${fieldName}\t${obj[fieldName]}`);
-        return tsvData.join('\r\n');
-      };
-      
-      const downloadTSV = () => {
-        const flatObject = flattenObject(jsonToDownload.value);
-        const tsvData = objectToTabDelimited(flatObject);
-                
-        const blob = new Blob([tsvData], {type: 'text/csv;charset=utf-8;'});
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'biologicalAssociations.tsv';
-        link.click();
-        
-        URL.revokeObjectURL(url);
+        return result;
       }
+      
+      function filterKeys(flattenedObj, keysToExtract) {
+        let filtered = {};
+        for (let key of keysToExtract) {
+          filtered[key] = flattenedObj[key] || '';
+        }
+        return filtered;
+      }
+      
+      function jsonToTsv(json, keysToExtract) {
+        const flattenedJson = json.map(item => filterKeys(flattenObject(item), keysToExtract));
+        const keys = keysToExtract;
+        const tsv = [
+          keys.join('\t'),
+          ...flattenedJson.map(row => keys.map(key => row[key]).join('\t'))
+        ].join('\n');
+
+        return tsv;
+      }
+       
+      const downloadTSV = (key) => {
+        var arrayInJson = jsonToDownload.value[key];
+        if (arrayInJson) {
+          var tsv = jsonToTsv(arrayInJson, keysToExtract);
+          if (tsv) {
+            var filename = `${props.tnProp}_${key}.tsv`;
+            var blob = new Blob([tsv], {type: 'text/tab-separated-values' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }
+          else {
+            console.log(`Expected array but got ${typeof tsv}`)
+          }
+        }
+        else {
+          console.log(`Expected array but got ${typeof arrayInJson}`)
+        }
+      };
       
       return { 
         ...toRefs(state),
         sortedBiologicalAssociations,
         baReferences,
         downloadJSON,
+        keysToExtract,
         flattenObject,
-        objectToTabDelimited,
         downloadTSV,
         jsonToDownload,
         familyName,

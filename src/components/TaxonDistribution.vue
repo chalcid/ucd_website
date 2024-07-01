@@ -92,23 +92,25 @@
 
       const fetchTaxonDistributions = async () => {
         try {
-          const combinedDistributionPromise = Promise.all ([
-            api.get(`/asserted_distributions`,
-              {params: {
-                taxon_name_id: props.baProp,
-                extend: ["geographic_area", "citations"],
-                per: "10000",
-                descendants: "true",
-                project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
-            }}),
-            api.get(`/otus/` + props.otuProp + `/inventory/distribution` ,
-              {params: {
-                project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
-            }})  
-          ]);
-          const [tdResponse, cachedMapResponse] = await combinedDistributionPromise;
-          taxonDistributionsJson.value = tdResponse.data;
-          taxonMap.value = cachedMapResponse.data.cached_map.geo_json;
+          if(props.otuProp > 0) {
+            const combinedDistributionPromise = Promise.all ([
+              api.get(`/asserted_distributions`,
+                {params: {
+                  taxon_name_id: props.baProp,
+                  extend: ["geographic_area", "citations"],
+                  per: "10000",
+                  descendants: "true",
+                  project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
+              }}),
+              api.get(`/otus/` + props.otuProp + `/inventory/distribution` ,
+                {params: {
+                  project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
+              }})  
+            ]);
+            const [tdResponse, cachedMapResponse] = await combinedDistributionPromise;
+            taxonDistributionsJson.value = tdResponse.data;
+            taxonMap.value = cachedMapResponse.data.cached_map.geo_json;
+          };
           
           if (taxonMap.value.length === 0) {
             state.hideMap = !state.hideMap;

@@ -71,14 +71,14 @@
     </div>
     <references v-show="toggleTree === 'history'" v-if="nomenclaturalReferencesResults && taxonViewed.length" :nr-Prop="nomenclaturalReferencesResults" :tn-Prop="taxonViewed[0].cached"></references>
     <div v-if="isTaxonIDChainPopulated">
-      <biological-associations v-if="taxonIDChain && taxonIDChain.length > 0 && (rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || rankString === 'NomenclaturalRank::Icn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species')" :ba-Prop="route.query.taxonID" :fa-Prop="familyName" :tn-Prop="taxonViewed[0].cached" :tid-prop="taxonIDChain"></biological-associations>
+      <biological-associations v-if="taxonIDChain && taxonIDChain.length > 0 && (isCombination === true || rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || rankString === 'NomenclaturalRank::Icn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species')" :ba-Prop="route.query.taxonID" :fa-Prop="familyName" :tn-Prop="taxonViewed[0].cached" :tid-prop="taxonIDChain"></biological-associations>
     </div>
       <div v-else><img src="/spinning-circles.svg" alt="Loading..." width="75"></div>
     </div>
     
     <div v-show="isTaxonIDChainPopulated" class="col-md-4" id="movingDiv">
       <!-- <images v-if="taxonIDChain && taxonIDChain.length > 0" :ba-Prop="taxonIDChain" class="space-below"></images> -->
-      <div v-if="rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::GenusGroup::Subgenus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'"><taxon-distribution v-if="taxonIDChain && taxonIDChain.length > 0" :ba-Prop="taxonIDChain" :otu-Prop="otu" :tn-Prop="taxonViewed[0].cached"></taxon-distribution></div>
+      <div v-if="isCombination === true || rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::GenusGroup::Subgenus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'"><taxon-distribution v-if="taxonIDChain && taxonIDChain.length > 0" :ba-Prop="taxonIDChain" :otu-Prop="otu" :tn-Prop="taxonViewed[0].cached"></taxon-distribution></div>
     </div>
   </div>
 </template>
@@ -115,11 +115,12 @@ h3{
       const state = reactive({
         showSynonyms: true,
         validified: [],
-        toggleTree: "history"
+        toggleTree: "history",
+        isCombination: false
       })
       
       const route = useRoute();
-      const taxonID = route.query.taxonID;
+      const taxonID = ref('');
       const rankString = ref('');
       const concatenatedTypeInfo = ref('');
       const typeID = ref('');
@@ -131,6 +132,7 @@ h3{
       const jsonToDownload = ref(null);
       const otu = ref('');
       const cachedNameString = ref('');
+      const validTaxonID = ref('');
       
       const nomenclaturalReferencesResults = computed(() => {
         if (!synonymArray.value.sources) {
@@ -164,7 +166,10 @@ h3{
           "Nomenclature references": [],
         };
         
-        await getTaxon(taxonID);
+        taxonID.value = route.query.taxonID;
+        if(taxonID.value) {
+          await getTaxon(taxonID);
+        };
         
         if (taxonViewed.value && taxonViewed.value[0] && taxonViewed.value[0].cached) {
           document.title = "UCD: " + taxonViewed.value[0].cached;
@@ -176,63 +181,81 @@ h3{
           jsonToDownload.value["Nomenclature references"] = nomenclaturalReferencesResults.value;
         }
       });
-            
+                 
       const getTaxon = async (taxonID) => {
-        const response = await api.get(`/taxon_names`,
+        if(taxonViewed.value.length === 0) {
+          const response = await api.get(`/taxon_names`,
             {params: {
-              taxon_name_id: taxonID,
+              taxon_name_id: taxonID.value,
               project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
         }});
+        taxonViewed.value = await response.data;
         
-        if(taxonViewed.value.length === 0) {
-          taxonViewed.value = response.data
-          rankString.value = taxonViewed.value[0].rank_string;
-          const combinedTaxonPromise = Promise.all ([
-            api.get(`/taxon_names`,
-              {params: {
-                combination_taxon_name_id: [taxonID],
-                project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
-            }}),
-            api.get(`/taxon_name_relationships`,
-              {params: {
-                object_taxon_name_id: taxonID,
-                project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
-            }}),
-            api.get(`/taxon_names/${taxonID}`,
-              {params: {
-                extend: ['ancestor_ids'],
-                project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
-            }}),
-            api.get(`/taxon_names/` + taxonID,
-              {params: {
-                validify: true,
-                extend: ["otus"],
-                project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
-            }})
-          ]);
-          const [combinationsResponse, relationshipsResponse, breadcrumbs, validify] = await combinedTaxonPromise;
-          const combinationsResponseSynonyms = await combinationsResponse.data;
-          const synonyms = await relationshipsResponse.data;
-          const breadcrumbsData = await breadcrumbs.data;
-          state.validified = await validify.data;
-          otu.value = state.validified.otus[0].id.toString();
-          if (!rankString.value) {
-            rankString.value = state.validified.rank_string;
-            taxonViewed.value[0].cached_author_year = taxonViewed.value[0].cached_author_year.replace(/\(|\)/g, "");
-            cachedNameString.value = state.validified.cached_html & " " & state.validified.cached_author_year;
+        if(taxonViewed.value) {
+          if(await taxonViewed.value[0].type === 'Combination') {
+            state.isCombination = true
+            validTaxonID.value = taxonViewed.value[0].cached_valid_taxon_name_id;
+            taxonID.value = taxonViewed.value[0].cached_valid_taxon_name_id;
+          }
+          else {
+            rankString.value = taxonViewed.value[0].rank_string;
           };
-          
-          jsonToDownload.value["Nomenclature data"]["Taxon viewed"] = taxonViewed.value;
-          jsonToDownload.value["Nomenclature data"]["Synonyms from taxon name combinations"] = combinationsResponseSynonyms;
-          jsonToDownload.value["Nomenclature data"]["Synonyms from taxon name relationships"] = synonyms;
-          
-          await breadcrumbsNamer(breadcrumbsData);
-          await typeInfo();
-          await makeSynonyms(synonyms, combinationsResponseSynonyms);
-        }
-        else {
-          return await response.data;
         };
+        const combinedTaxonPromise = Promise.all ([
+          api.get(`/taxon_names`,
+            {params: {
+              combination_taxon_name_id: [taxonID.value],
+              project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
+          }}),
+          api.get(`/taxon_name_relationships`,
+            {params: {
+              object_taxon_name_id: taxonID.value,
+              project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
+          }}),
+          api.get(`/taxon_names/${taxonID.value}`,
+            {params: {
+              extend: ['ancestor_ids'],
+              project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
+          }}),
+          api.get(`/taxon_names/` + taxonID.value,
+            {params: {
+              validify: true,
+              extend: ["otus"],
+              project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
+          }})
+        ]);
+        const [combinationsResponse, relationshipsResponse, breadcrumbs, validify] = await combinedTaxonPromise;
+        const combinationsResponseSynonyms = await combinationsResponse.data;
+        const synonyms = await relationshipsResponse.data;
+        const breadcrumbsData = await breadcrumbs.data;
+        state.validified = await validify.data;
+        otu.value = await state.validified.otus[0].id.toString();
+        validTaxonID.value = await state.validified.cached_valid_taxon_name_id;
+        if (!rankString.value) {
+          rankString.value = state.validified.rank_string;
+          taxonViewed.value[0].cached_author_year = taxonViewed.value[0].cached_author_year.replace(/\(|\)/g, "");
+          cachedNameString.value = state.validified.cached_html & " " & state.validified.cached_author_year;
+          if(taxonViewed.value[0].type === 'Combination') {
+            //state.isCombination = true;
+            //validTaxonID.value = state.validified.cached_valid_taxon_name_id;
+            //const getChiefOtu = 
+          }
+          else {
+            console.log("The rank_string is null but the taxon name is not a combination");
+          }
+        };
+        
+        jsonToDownload.value["Nomenclature data"]["Taxon viewed"] = taxonViewed.value;
+        jsonToDownload.value["Nomenclature data"]["Synonyms from taxon name combinations"] = combinationsResponseSynonyms;
+        jsonToDownload.value["Nomenclature data"]["Synonyms from taxon name relationships"] = synonyms;
+        
+        await breadcrumbsNamer(breadcrumbsData);
+        await typeInfo();
+        await makeSynonyms(synonyms, combinationsResponseSynonyms);
+      }
+      else {
+        return await response.data;
+      };
       };
       
       const makeSynonyms = async (synonyms, combinationsResponseSynonyms) => {
@@ -254,7 +277,7 @@ h3{
           isTaxonIDChainPopulated.value = !isTaxonIDChainPopulated.value; 
         }
 
-        const synonymResponse = await api.get(`/taxon_names/${taxonID}/inventory/catalog`,
+        const synonymResponse = await api.get(`/taxon_names/${taxonID.value}/inventory/catalog`,
           {params: {
             project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
         }});
@@ -397,6 +420,7 @@ h3{
       return {
         ...toRefs(state),
         route,
+        taxonID,
         nomenclaturalReferencesResults, 
         italicized, 
         resultsExist,
@@ -418,7 +442,8 @@ h3{
         flattenObject,
         familyName,
         otu,
-        cachedNameString
+        cachedNameString,
+        validTaxonID
       };
     }
   }

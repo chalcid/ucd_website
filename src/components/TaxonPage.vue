@@ -53,7 +53,7 @@
             <span v-show="!showSynonyms"> Show taxonomic history</span>
             <span v-show="showSynonyms"> Taxonomic history</span>
           </button>
-          <button class="btn btn-outline-primary" id="outline-button" v-show="showSynonyms" @click="downloadJSON" title="Java Script Object Notation, well-structured format">download (JSON)</button>  <button class="btn btn-outline-primary" id="outline-button" v-show="showSynonyms" @click="downloadTSV" title="Tab Separated Values, simple format">download (TSV)</button> 
+          <!-- <button class="btn btn-outline-primary" id="outline-button" v-show="showSynonyms" @click="downloadJSON" title="Java Script Object Notation, well-structured format">download (JSON)</button>  <button class="btn btn-outline-primary" id="outline-button" v-show="showSynonyms" @click="downloadTSV('Nomenclature data')" title="Tab Separated Values, simple format">download (TSV)</button> -->
           <div id="collapseSynonyms" v-show="showSynonyms">
             <div id="showIfQuery" v-if="resultsExist">
               <ul v-if="synonymArray" id="results-list-span">
@@ -69,16 +69,16 @@
           </div>
         </div>
     </div>
-    <references v-show="toggleTree === 'history'" v-if="nomenclaturalReferencesResults" :nr-Prop="nomenclaturalReferencesResults"></references>
+    <references v-show="toggleTree === 'history'" v-if="nomenclaturalReferencesResults && taxonViewed.length" :nr-Prop="nomenclaturalReferencesResults" :tn-Prop="taxonViewed[0].cached"></references>
     <div v-if="isTaxonIDChainPopulated">
-      <biological-associations v-if="taxonIDChain && taxonIDChain.length > 0 && (rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || rankString === 'NomenclaturalRank::Icn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species')" :ba-Prop="route.query.taxonID" :fa-Prop="familyName" :tid-prop="taxonIDChain"></biological-associations>
+      <biological-associations v-if="taxonIDChain && taxonIDChain.length > 0 && (rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || rankString === 'NomenclaturalRank::Icn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species')" :ba-Prop="route.query.taxonID" :fa-Prop="familyName" :tn-Prop="taxonViewed[0].cached" :tid-prop="taxonIDChain"></biological-associations>
     </div>
       <div v-else><img src="/spinning-circles.svg" alt="Loading..." width="75"></div>
     </div>
     
     <div v-show="isTaxonIDChainPopulated" class="col-md-4" id="movingDiv">
       <!-- <images v-if="taxonIDChain && taxonIDChain.length > 0" :ba-Prop="taxonIDChain" class="space-below"></images> -->
-      <div v-if="rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::GenusGroup::Subgenus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'"><taxon-distribution v-if="taxonIDChain && taxonIDChain.length > 0" :ba-Prop="taxonIDChain" :otu-Prop="otu" ></taxon-distribution></div>
+      <div v-if="rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::GenusGroup::Subgenus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species'"><taxon-distribution v-if="taxonIDChain && taxonIDChain.length > 0" :ba-Prop="taxonIDChain" :otu-Prop="otu" :tn-Prop="taxonViewed[0].cached"></taxon-distribution></div>
     </div>
   </div>
 </template>
@@ -91,7 +91,7 @@ h3{
 </style>
   
 <script>
-  import { onMounted, reactive, computed, ref, toRefs } from 'vue';
+  import { onMounted, reactive, computed, ref, toRefs, watch } from 'vue';
   import api from '/api.js';
   import BiologicalAssociations from './BiologicalAssociations.vue';
   import References from "./References.vue";
@@ -132,7 +132,12 @@ h3{
       const otu = ref('');
       const cachedNameString = ref('');
       
-      const nomenclaturalReferencesResults = computed(() => synonymArray.value.sources);
+      const nomenclaturalReferencesResults = computed(() => {
+        if (!synonymArray.value.sources) {
+          return [];
+        }
+        return synonymArray.value.sources.map(ref => ref.cached);
+      });
       
       const italicized = computed(() => {
         if(taxonViewed.value && taxonViewed.value[0]) {
@@ -337,44 +342,57 @@ h3{
       }
       
       function flattenObject(ob) {
-        var toReturn = {};
+        let result = {};
         
         for (var i in ob) {
-            if (!ob.hasOwnProperty(i)) continue;
-            
-            if ((typeof ob[i]) == 'object' && ob[i] !== null) {
-                var flatObject = flattenObject(ob[i]);
-                for (var x in flatObject) {
-                    if (!flatObject.hasOwnProperty(x)) continue;
-                    
-                    toReturn[i + '.' + x] = flatObject[x];
-                }
-            } else {
-                toReturn[i] = ob[i];
+          if ((typeof ob[i]) === 'object' && !Array.isArray(ob[i])) {
+            var temp = flattenObject(ob[i]);
+            for (var j in temp) {
+              result[i + '.' + j] = temp[j];
             }
+          }
+          else {
+            result[i] = ob[i];
+          }
         }
-        return toReturn;
+        return result;
       };
       
-      function objectToTabDelimited(obj) {
-        let fields = Object.keys(obj);
-        let tsvData = fields.map(fieldName => `${fieldName}\t${obj[fieldName]}`);
-        return tsvData.join('\r\n');
-      };
+      function jsonToTsv(json) {
+        var flattenedJson = json.map(item => flattenObject(item));
+        var keys = Object.keys(flattenedJson[0]);
+        var tsv = [
+          keys.join('\t'),
+          ...flattenedJson.map(row => keys.map(key => row[key]).join('\t'))
+        ].join('\n');
       
-      const downloadTSV = () => {      
-        let flatObject = flattenObject(jsonToDownload.value);
-        let tsvData = objectToTabDelimited(flatObject);
-                
-        const blob = new Blob([tsvData], {type: 'text/csv;charset=utf-8;'});
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'taxonPage.tsv';
-        link.click();
-        
-        URL.revokeObjectURL(url);
-      }
+        return tsv;
+      };
+       
+      const downloadTSV = (key) => {
+        var arrayInJson = jsonToDownload.value[key];
+        if (arrayInJson) {
+          var tsv = jsonToTsv(arrayInJson);
+          if (tsv) {
+            var filename = `${props.tnProp}_${key}.tsv`;
+            var blob = new Blob([tsv], {type: 'text/tab-separated-values' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }
+          else {
+            console.log(`Expected array but got ${typeof tsv}`)
+          }
+        }
+        else {
+          console.log(`Expected array but got ${typeof arrayInJson}`)
+        }
+      };
       
       return {
         ...toRefs(state),
@@ -395,8 +413,8 @@ h3{
         taxonIDChain,
         jsonToDownload,
         downloadJSON,
+        jsonToTsv,
         downloadTSV,
-        objectToTabDelimited,
         flattenObject,
         familyName,
         otu,

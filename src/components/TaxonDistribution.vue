@@ -4,7 +4,7 @@
     <span v-show="isLoading && !hideMap">Please wait for the map to load...</span>
     <div v-show="!hideMap" id="map" class="leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" style="width: 600px; height: 400px; position: relative; outline-style: none;"></div>
   </div>
-  <references v-show="!hideMap" :ad-Prop="adReferences"></references>
+  <references v-show="!hideMap" :ad-Prop="adReferences" :tn-Prop="tnProp"></references>
 </template>
 
 <script>
@@ -19,7 +19,8 @@
 
     props: {
       baProp: Array,
-      otuProp: String
+      otuProp: String,
+      tnProp: String
     },
     
     components: {

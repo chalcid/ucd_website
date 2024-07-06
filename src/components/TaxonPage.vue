@@ -270,7 +270,7 @@ h3{
         }
         
         if(taxonIDChain.value.length === 0){
-          taxonIDChain.value.push(taxonID)
+          taxonIDChain.value.push(taxonID.value)
         }
         
         if(taxonIDChain.value.length > 0) {
@@ -289,7 +289,7 @@ h3{
         if(rankString.value === "NomenclaturalRank::Iczn::SpeciesGroup::Species"){
           const response = await api.get(`/data_attributes`,
             {params: {
-              attribute_subject_id: taxonID,
+              attribute_subject_id: taxonID.value,
               project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
           }});
           const dataAttributesResults = response.data;
@@ -303,7 +303,7 @@ h3{
         else if(rankString.value === "NomenclaturalRank::Iczn::GenusGroup::Genus" || rankString.value === "NomenclaturalRank::Iczn::GenusGroup::Subgenus"){
           const response = await api.get(`/taxon_name_relationships`,
             {params: {
-              object_taxon_name_id: taxonID,
+              object_taxon_name_id: taxonID.value,
               project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
           }});
           const dataAttributesResults = response.data;
@@ -321,7 +321,7 @@ h3{
         else if(rankString.value === "NomenclaturalRank::Iczn::FamilyGroup::Family" || rankString.value === "NomenclaturalRank::Iczn::FamilyGroup::Subfamily" || rankString.value === "NomenclaturalRank::Iczn::FamilyGroup::Tribe" || rankString.value === "NomenclaturalRank::Iczn::FamilyGroup::Subtribe"){
           const response = await api.get(`/taxon_name_relationships`,
             {params: {
-              object_taxon_name_id: taxonID,
+              object_taxon_name_id: taxonID.value,
               project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
           }});
           const dataAttributesResults = await response.data;

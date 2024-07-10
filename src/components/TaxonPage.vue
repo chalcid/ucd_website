@@ -201,16 +201,26 @@ h3{
             state.isCombination = true
             oldTaxonID.value = taxonViewed.value[0].id;
             validTaxonID.value = taxonViewed.value[0].cached_valid_taxon_name_id;
-            taxonID.value = taxonViewed.value[0].cached_valid_taxon_name_id;
-            const otuGet = api.get(`/taxon_names/${validTaxonID.value}`,
+            const otuGet = await api.get(`/taxon_names/${validTaxonID.value}`,
               {params: {
                 extend: ["otus"],
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
             }})
-            state.validified = await otuGet;
+            state.validified = await otuGet.data;
+            otu.value = await state.validified.otus[0].id.toString();
+            validTaxonID.value = await state.validified.cached_valid_taxon_name_id;
           }
           else {
             rankString.value = taxonViewed.value[0].rank_string;
+            const validifiedOtuGet = await api.get(`/taxon_names/${taxonNameID}`,
+              {params: {
+                extend: ["otus"],
+                project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
+            }})
+            const validifiedOtuGetResponse = await validifiedOtuGet.data;
+            state.validified = await validifiedOtuGetResponse;
+            otu.value = await state.validified.otus[0].id.toString();
+            validTaxonID.value = await state.validified.id;
           };
           const combinedTaxonPromise = Promise.all ([
             api.get(`/taxon_names`,
@@ -227,21 +237,12 @@ h3{
               {params: {
                 extend: ['ancestor_ids'],
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
-            }}),
-            api.get(`/taxon_names/${taxonNameID}`,
-              {params: {
-                validify: true,
-                extend: ["otus"],
-                project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
             }})
           ]);
-          const [combinationsResponse, relationshipsResponse, breadcrumbs, validify] = await combinedTaxonPromise;
+          const [combinationsResponse, relationshipsResponse, breadcrumbs] = await combinedTaxonPromise;
           const combinationsResponseSynonyms = await combinationsResponse.data;
           const synonyms = await relationshipsResponse.data;
           const breadcrumbsData = await breadcrumbs.data;
-          state.validified = await validify.data;
-          otu.value = await state.validified.otus[0].id.toString();
-          validTaxonID.value = await state.validified.cached_valid_taxon_name_id;
           if (!rankString.value) {
             rankString.value = state.validified.rank_string;
             taxonViewed.value[0].cached_author_year = taxonViewed.value[0].cached_author_year.replace(/\(|\)/g, "");

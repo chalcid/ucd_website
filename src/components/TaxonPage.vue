@@ -308,7 +308,7 @@ h3{
         if(rankString.value === "NomenclaturalRank::Iczn::SpeciesGroup::Species" || state.isCombination === true){
           const response = await api.get(`/data_attributes`,
             {params: {
-              attribute_subject_id: taxonID.value,
+              attribute_subject_id: validTaxonID.value,
               project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
           }});
           const dataAttributesResults = response.data;

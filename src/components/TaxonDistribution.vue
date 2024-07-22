@@ -118,10 +118,16 @@
             
           initializeMap();
         } catch (error) {
-            console.log("There was a problem retrieving taxon distributions.")
-            state.hideMap = !state.hideMap;
+            if(error.message.includes('404')){
+              console.log("There are no distribution data for this taxon.")
+              state.hideMap = !state.hideMap;
+            }
+            else {
+              console.log("There was a problem retrieving taxon distributions.")
+              state.hideMap = !state.hideMap;
+            };
+          };
         };
-      };
 
       return {
         ...toRefs(state),

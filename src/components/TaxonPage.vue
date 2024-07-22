@@ -21,18 +21,17 @@
       </h3>
       <h3 v-else-if="italicized && taxonViewed[0] && taxonViewed[0].cached_is_valid===false && validified">
         <span v-if="taxonViewed[0].cached_html" v-html="cachedNameString"></span>
-        <span v-else v-html="validified[0].cached_html + '(' + taxonViewed[0].cached_author_year + ')'"></span>
+        <span v-else v-html="validified.cached_html + '(' + taxonViewed[0].cached_author_year + ')'"></span>
       </h3>
       <h3 v-else-if="italicized && taxonViewed[0] && taxonViewed[0].cached_is_valid===false">
         <span v-if="taxonViewed[0].cached_html" v-html="cachedNameString"></span>
-        <span v-else v-html="validified[0].cached_html + '(' + taxonViewed[0].cached_author_year + ')'"></span>
+        <span v-else v-html="validified.cached_html + '(' + taxonViewed[0].cached_author_year + ')'"></span>
       </h3>
       <h3 v-else-if="taxonViewed[0] && taxonViewed[0].cached_is_valid===true">{{ taxonViewed[0].cached }} {{ taxonViewed[0].cached_author_year }}</h3>
       <h3 v-else-if="taxonViewed[0] && taxonViewed[0].cached_is_valid===false" v-html="cachedNameString"></h3>
       <span v-else></span>
-      <span v-if="italicized && taxonViewed[0] && validified[0] && taxonViewed[0].cached_is_valid===false"><h5>Invalid name. Valid name: <router-link :to="{ name: 'TaxonPage', query: { taxonID: validified[0].id }}"><i>{{ validified[0].cached }}</i> {{ validified[0].cached_author_year }}</router-link></h5></span>
-      <span v-else-if="taxonViewed[0] && validified[0] && taxonViewed[0].cached_is_valid===false"><h3></h3><h5>Invalid name. Valid name: <router-link :to="{ name: 'TaxonPage', query: { taxonID: validified[0].id }}">{{ validified[0].cached }} {{ validified[0].cached_author_year }}</router-link></h5></span>
-      <span v-else></span>
+      <span v-if="italicized && taxonViewed[0] && taxonViewed[0].cached_is_valid===false"><h5>Invalid name. Valid name: <router-link :to="{ name: 'TaxonPage', query: { taxonID: validified.id }}"><i>{{ validified.cached }}</i> {{ validified.cached_author_year }}</router-link></h5></span>
+      <span v-else-if="taxonViewed[0] && taxonViewed[0].cached_is_valid===false"><h3></h3><h5>Invalid name. Valid name: <router-link :to="{ name: 'TaxonPage', query: { taxonID: validified.id }}">{{ validified.cached }} {{ validified.cached_author_year }}</router-link></h5></span>
     </div>
   </div>
   <div class="row">
@@ -219,8 +218,12 @@ h3{
             }})
             const validifiedOtuGetResponse = await validifiedOtuGet.data;
             state.validified = await validifiedOtuGetResponse;
-            otu.value = await state.validified.otus[0].id.toString();
-            validTaxonID.value = await state.validified.id;
+            try {
+              otu.value = await state.validified.otus[0].id.toString();
+              validTaxonID.value = await state.validified.id;
+            } catch (error) {
+              console.log("Error retrieving this taxon. Does it exist in the database?")
+            }
           };
           const combinedTaxonPromise = Promise.all ([
             api.get(`/taxon_names`,

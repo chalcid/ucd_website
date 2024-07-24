@@ -209,6 +209,23 @@ h3{
             otu.value = await state.validified.otus[0].id.toString();
             validTaxonID.value = await state.validified.cached_valid_taxon_name_id;
           }
+          else if (await taxonViewed.value[0].cached_is_valid===false) {
+            oldTaxonID.value = taxonViewed.value[0].id;
+            validTaxonID.value = taxonViewed.value[0].cached_valid_taxon_name_id;
+            const otuGet = await api.get(`/taxon_names/${validTaxonID.value}`,
+              {params: {
+                extend: ["otus"],
+                project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
+            }})
+            state.validified = await otuGet.data;
+            if(state.validified.otus.length > 0 ){
+               otu.value = await state.validified.otus[0].id.toString();
+            }
+            else{
+              console.log("There are no otus for this taxon.")
+            }
+            validTaxonID.value = await state.validified.cached_valid_taxon_name_id;
+          }
           else {
             rankString.value = taxonViewed.value[0].rank_string;
             const validifiedOtuGet = await api.get(`/taxon_names/${taxonNameID}`,

@@ -40,8 +40,11 @@
       <li>Pâmella Machado Saguiah, Ciências Biológicas pela Universidade Federal do Espírito Santo, Brazil</li>
       <li>Natalie Dale-Skey, The Museum of Natural History, London, United Kingdom</li>
       <li>James B. Woolley, Texas A&M University, College Station, TX, USA</li>
-      <li>Vaggelis Koutsoukos, National and Kapodistrian University of Athens, Greece</li>
+      <li>Vaggelis Koutsoukos, National and Kapodistrian University of Athens, Greece</li>     
     </ul>
+    
+    <p>To report curation issues: <a href='https://github.com/chalcid/ucd/issues'>Curation GitHub</a></p>
+    <p>To report website function issues: <a href='https://github.com/chalcid/ucd_website/issues'>Website Github</a></p>
     
     <p><strong>TaxonWorks Development and Outreach Team</strong>: Matt Yoder, Dmitry Dmitriev, José Luis Pereira, Hernán Lucas Pereira, Deborah Paul.</p>
 

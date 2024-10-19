@@ -7,7 +7,7 @@
               <router-link :to ="{name: 'Home'} " class="nav-link">Home</router-link>
             </li>
             <li class="nav-item">
-              <router-link :to ="{name: 'BinomialSearch'} " class="nav-link">Search names</router-link>
+              <router-link :to ="{name: 'BinomialSearch'} " class="nav-link">Search names of chalcidoids and associates</router-link>
             </li>
             <!--<li class="nav-item">
               <router-link :to ="{name: 'AssociatesSearch'} " class="nav-link">Search associates</router-link>

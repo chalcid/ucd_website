@@ -351,7 +351,7 @@ h3{
             const subjectTaxonNameId = extractedValues.subject_taxon_name_id.toString();
             const typeSpecies = await getTaxon(subjectTaxonNameId);
             typeID.value = typeSpecies[0].id;
-            concatenatedTypeInfo.value = typeSpecies[0].cached_original_combination_html + " " + typeSpecies[0].cached_author_year;
+            concatenatedTypeInfo.value = typeSpecies[0].cached_original_combination_html + " " + typeSpecies[0].cached_author_year.replace(/[)(]/g, '');
           };
         }
         else if(rankString.value === "NomenclaturalRank::Iczn::FamilyGroup::Family" || rankString.value === "NomenclaturalRank::Iczn::FamilyGroup::Subfamily" || rankString.value === "NomenclaturalRank::Iczn::FamilyGroup::Tribe" || rankString.value === "NomenclaturalRank::Iczn::FamilyGroup::Subtribe"){

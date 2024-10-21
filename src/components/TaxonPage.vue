@@ -323,7 +323,22 @@ h3{
       
       const typeInfo = async () => {
         if(rankString.value === "NomenclaturalRank::Iczn::SpeciesGroup::Species" || state.isCombination === true){
-          const response = await api.get(`/data_attributes`,
+          
+          const responseB = await api.get(`/otus/${otu.value}/inventory/type_material`,
+            {params: {
+              project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
+            }})
+          const newOtuTypeLabel = await responseB.data;
+          if(await newOtuTypeLabel){
+            jsonToDownload.value["Additional data"] = await newOtuTypeLabel;
+            const extractedTypeInfo = await newOtuTypeLabel.type_materials_catalog_labels[0];
+            if(extractedTypeInfo){
+              concatenatedTypeInfo.value = "Type information: " + await extractedTypeInfo.type_type + ', Label: ' + extractedTypeInfo.label;
+            };
+          };
+          
+          if(concatenatedTypeInfo.value.length < 20){
+            const response = await api.get(`/data_attributes`,
             {params: {
               attribute_subject_id: validTaxonID.value,
               project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
@@ -335,18 +350,7 @@ h3{
                   return item.value === 'LT' ? 'Lectotype' : item.value === 'HT' ? 'Holotype' : item.value === 'ST' ? 'Syntypes' : item.value === 'NT' ? 'Neotype' : item.value === 'F' ? 'Female' : item.value === 'M' ? 'Male' : item.value;
           });
           concatenatedTypeInfo.value = "Type information: " + await extractedValues.join(", ");
-          
-          if(concatenatedTypeInfo.value.length < 20){
-            const responseB = await api.get(`/otus/${otu.value}/inventory/type_material`,
-            {params: {
-              project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
-            }})
-            const newOtuTypeLabel = await responseB.data;
-            if(await newOtuTypeLabel){
-              jsonToDownload.value["Additional data"] = await newOtuTypeLabel;
-              const extractedTypeInfo = await newOtuTypeLabel.type_materials_catalog_labels[0];
-              concatenatedTypeInfo.value = "Type information: " + await extractedTypeInfo.type_type + ', Label: ' + extractedTypeInfo.label;
-            };
+
           };
         }
         else if(rankString.value === "NomenclaturalRank::Iczn::GenusGroup::Genus" || rankString.value === "NomenclaturalRank::Iczn::GenusGroup::Subgenus"){

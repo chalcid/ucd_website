@@ -42,7 +42,7 @@
     
     setup(props) {
       const state = reactive({
-        showReferences: true,
+        showReferences: false,
         arrayInJson: [],
       });
       

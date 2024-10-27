@@ -67,12 +67,11 @@
             </div>
           </div>
         </div>
-    </div>
-    <references v-show="toggleTree === 'history'" v-if="nomenclaturalReferencesResults && taxonViewed.length" :nr-Prop="nomenclaturalReferencesResults" :tn-Prop="taxonViewed[0].cached"></references>
-    <div v-if="isTaxonIDChainPopulated">
-      <biological-associations v-if="taxonIDChain && taxonIDChain.length > 0 && (isCombination === true || rankString === 'NomenclaturalRank::Iczn::FamilyGroup::Family' || rankString === 'NomenclaturalRank::Iczn::FamilyGroup::Subfamily' || rankString === 'NomenclaturalRank::Iczn::FamilyGroup::Tribe' || rankString === 'NomenclaturalRank::Icn::FamilyGroup::Family' || rankString === 'NomenclaturalRank::Icn::FamilyGroup::Subfamily' || rankString === 'NomenclaturalRank::Icn::FamilyGroup::Tribe' || rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || rankString === 'NomenclaturalRank::Icn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species')" :ba-Prop="route.query.taxonID" :fa-Prop="familyName" :tn-Prop="taxonViewed[0].cached" :tid-prop="taxonIDChain"></biological-associations>
-    </div>
-      <div v-else><img src="/spinning-circles.svg" alt="Loading..." width="75"></div>
+      </div>
+      <references v-show="toggleTree === 'history'" v-if="nomenclaturalReferencesResults && taxonViewed.length" :nr-Prop="nomenclaturalReferencesResults" :tn-Prop="taxonViewed[0].cached"></references>
+      <div v-if="isTaxonIDChainPopulated">
+        <biological-associations v-if="taxonIDChain && taxonIDChain.length > 0 && (isCombination === true || rankString === 'NomenclaturalRank::Iczn::FamilyGroup::Family' || rankString === 'NomenclaturalRank::Iczn::FamilyGroup::Subfamily' || rankString === 'NomenclaturalRank::Iczn::FamilyGroup::Tribe' || rankString === 'NomenclaturalRank::Icn::FamilyGroup::Family' || rankString === 'NomenclaturalRank::Icn::FamilyGroup::Subfamily' || rankString === 'NomenclaturalRank::Icn::FamilyGroup::Tribe' || rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || rankString === 'NomenclaturalRank::Icn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species')" :ba-Prop="route.query.taxonID" :fa-Prop="familyName" :tn-Prop="taxonViewed[0].cached" :tid-prop="taxonIDChain"></biological-associations>
+      </div>
     </div>
     
     <div v-show="isTaxonIDChainPopulated" class="col-md-4" id="movingDiv">
@@ -97,6 +96,7 @@ h3{
   import TaxonDistribution from "./TaxonDistribution.vue";
   import TaxonomicTree from './TaxonomicTree.vue';
   import Images from './Images.vue';
+  import CalmingWheel from './CalmingWheel.vue';
   import { useRoute } from 'vue-router';
   
   export default {
@@ -107,12 +107,13 @@ h3{
       References,
       TaxonDistribution,
       TaxonomicTree,
+      CalmingWheel,
       Images
     },
     
     setup() {
       const state = reactive({
-        showSynonyms: true,
+        showSynonyms: false,
         validified: [],
         toggleTree: "history",
         isCombination: false
@@ -134,6 +135,7 @@ h3{
       const validTaxonID = ref('');
       const oldTaxonID =  ref('');
       const gettingType = ref(false);
+      const loading = ref(true);
       
       const nomenclaturalReferencesResults = computed(() => {
         if (!synonymArray.value.sources) {
@@ -184,7 +186,9 @@ h3{
         
         if(nomenclaturalReferencesResults){
           jsonToDownload.value["Nomenclature references"] = nomenclaturalReferencesResults.value;
-        }
+        };
+        
+        loadingWheelData();
       });
                  
       const getTaxon = async (taxonNameID) => {
@@ -470,7 +474,7 @@ h3{
           console.log(`Expected array but got ${typeof arrayInJson}`)
         }
       };
-      
+
       return {
         ...toRefs(state),
         route,
@@ -498,7 +502,8 @@ h3{
         otu,
         cachedNameString,
         validTaxonID,
-        oldTaxonID
+        oldTaxonID,
+        loading
       };
     }
   }

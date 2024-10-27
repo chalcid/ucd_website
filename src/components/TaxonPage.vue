@@ -36,8 +36,13 @@
   </div>
   <div class="row">
     <div class="col-md-8" id="stationaryDiv">
+      <button class="btn btn-link" type="button" @click="showSynonyms = !showSynonyms" aria-expanded="false">
+            <font-awesome-icon :icon="showSynonyms ? 'angle-down' : 'angle-right'" />
+            <span v-show="!showSynonyms"> Show taxonomic history or included taxa</span>
+            <span v-show="showSynonyms"> Taxonomic history or included taxa</span>
+      </button>
       <fieldset>
-        <div class="indent">
+        <div class="indent" v-show="showSynonyms">
           <input type="radio" id="taxonomic-history" value="history" v-model="toggleTree" />
           <label class="padding-left-and-right" for="descendant-tree">See taxonomic history</label>
           <input type="radio" id="descendant-tree" value="tree" v-model="toggleTree" />
@@ -47,11 +52,6 @@
       <taxonomic-tree v-show="toggleTree === 'tree'" v-if="taxonViewed[0]" class="space-above"></taxonomic-tree>
       <div v-show="toggleTree === 'history'" ref="containerOfSynonyms" name="taxonPageSynonymsContainer">
         <div class="col-12 bd-highlight align-items-start" ref="resultsList">
-          <button class="btn btn-link" type="button" @click="showSynonyms = !showSynonyms" aria-expanded="false">
-            <font-awesome-icon :icon="showSynonyms ? 'angle-down' : 'angle-right'" />
-            <span v-show="!showSynonyms"> Show taxonomic history</span>
-            <span v-show="showSynonyms"> Taxonomic history</span>
-          </button>
           <!-- <button class="btn btn-outline-primary" id="outline-button" v-show="showSynonyms" @click="downloadJSON" title="Java Script Object Notation, well-structured format">download (JSON)</button>  <button class="btn btn-outline-primary" id="outline-button" v-show="showSynonyms" @click="downloadTSV('Nomenclature data')" title="Tab Separated Values, simple format">download (TSV)</button> -->
           <div id="collapseSynonyms" v-show="showSynonyms">
             <div id="showIfQuery" v-if="resultsExist">
@@ -96,7 +96,6 @@ h3{
   import TaxonDistribution from "./TaxonDistribution.vue";
   import TaxonomicTree from './TaxonomicTree.vue';
   import Images from './Images.vue';
-  import CalmingWheel from './CalmingWheel.vue';
   import { useRoute } from 'vue-router';
   
   export default {
@@ -107,7 +106,6 @@ h3{
       References,
       TaxonDistribution,
       TaxonomicTree,
-      CalmingWheel,
       Images
     },
     

@@ -22,7 +22,7 @@
     </div>
     <references :bar-Prop="baReferences" :tn-Prop="tnProp"></references>
   </div>
-  <div class="indent" v-else-if="emptyArray === true"></div>
+  <div class="indent" v-if="loading === false"></div>
   <div v-else><img src="/bars-rotate-fade.svg" alt="Loading..."></div>
 </template>
 
@@ -52,12 +52,12 @@
         showBiologicalAssociations: false,
         biologicalAssociationsJson: [],
         baReferences: [],
-        emptyArray: false,
         arrayInJson: []
       });
       
       const jsonToDownload = ref(null);
       const familyName = ref(props.faProp);
+      const loading = ref(false);
       
       const sortedBiologicalAssociations = computed(() => {
         return state.biologicalAssociationsJson
@@ -88,7 +88,7 @@
       
       const groupedBiologicalAssociations = computed(() => {
         if (sortedBiologicalAssociations.value.length > 0) {
-          state.emptyArray = true;
+          state.loading = false;
         }
         const associations = sortedBiologicalAssociations.value.reduce((group, association) => {
           const groupingFamily = association.groupingFamily;
@@ -211,6 +211,7 @@
             }
           }
         }
+        state.loading = false;
         return result;
       }
       
@@ -268,7 +269,8 @@
         downloadTSV,
         jsonToDownload,
         familyName,
-        groupedBiologicalAssociations
+        groupedBiologicalAssociations,
+        loading
       };
     }
   }

@@ -135,7 +135,6 @@ h3{
       const validTaxonID = ref('');
       const oldTaxonID =  ref('');
       const gettingType = ref(false);
-      const loading = ref(true);
       
       const nomenclaturalReferencesResults = computed(() => {
         if (!synonymArray.value.sources) {
@@ -187,8 +186,6 @@ h3{
         if(nomenclaturalReferencesResults){
           jsonToDownload.value["Nomenclature references"] = nomenclaturalReferencesResults.value;
         };
-        
-        loadingWheelData();
       });
                  
       const getTaxon = async (taxonNameID) => {
@@ -503,7 +500,6 @@ h3{
         cachedNameString,
         validTaxonID,
         oldTaxonID,
-        loading
       };
     }
   }

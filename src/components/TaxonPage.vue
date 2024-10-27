@@ -38,21 +38,11 @@
     <div class="col-md-8" id="stationaryDiv">
       <button class="btn btn-link" type="button" @click="showSynonyms = !showSynonyms" aria-expanded="false">
             <font-awesome-icon :icon="showSynonyms ? 'angle-down' : 'angle-right'" />
-            <span v-show="!showSynonyms"> Show taxonomic history or included taxa</span>
-            <span v-show="showSynonyms"> Taxonomic history or included taxa</span>
+            <span v-show="!showSynonyms"> Show taxonomic history</span>
+            <span v-show="showSynonyms"> Taxonomic history</span>
       </button>
-      <fieldset>
-        <div class="indent" v-show="showSynonyms">
-          <input type="radio" id="taxonomic-history" value="history" v-model="toggleTree" />
-          <label class="padding-left-and-right" for="descendant-tree">See taxonomic history</label>
-          <input type="radio" id="descendant-tree" value="tree" v-model="toggleTree" />
-          <label class="padding-left" for="taxonomic-history">See included taxa</label>
-        </div>
-      </fieldset>
-      <taxonomic-tree v-show="toggleTree === 'tree'" v-if="taxonViewed[0]" class="space-above"></taxonomic-tree>
-      <div v-show="toggleTree === 'history'" ref="containerOfSynonyms" name="taxonPageSynonymsContainer">
+      <div ref="containerOfSynonyms" name="taxonPageSynonymsContainer">
         <div class="col-12 bd-highlight align-items-start" ref="resultsList">
-          <!-- <button class="btn btn-outline-primary" id="outline-button" v-show="showSynonyms" @click="downloadJSON" title="Java Script Object Notation, well-structured format">download (JSON)</button>  <button class="btn btn-outline-primary" id="outline-button" v-show="showSynonyms" @click="downloadTSV('Nomenclature data')" title="Tab Separated Values, simple format">download (TSV)</button> -->
           <div id="collapseSynonyms" v-show="showSynonyms">
             <div id="showIfQuery" v-if="resultsExist">
               <ul v-if="synonymArray" id="results-list-span">
@@ -68,7 +58,13 @@
           </div>
         </div>
       </div>
-      <references v-show="toggleTree === 'history'" v-if="nomenclaturalReferencesResults && taxonViewed.length" :nr-Prop="nomenclaturalReferencesResults" :tn-Prop="taxonViewed[0].cached"></references>
+      <button class="btn btn-link" type="button" @click="showIncluded = !showIncluded" aria-expanded="false">
+        <font-awesome-icon :icon="showIncluded ? 'angle-down' : 'angle-right'" />
+        <span v-show="!showIncluded"> Show included taxa</span>
+        <span v-show="showIncluded"> Included taxa</span>
+      </button>
+      <taxonomic-tree v-show="showIncluded" v-if="taxonViewed[0]" class="space-above"></taxonomic-tree>
+      <references v-if="nomenclaturalReferencesResults && taxonViewed.length" :nr-Prop="nomenclaturalReferencesResults" :tn-Prop="taxonViewed[0].cached"></references>
       <div v-if="isTaxonIDChainPopulated">
         <biological-associations v-if="taxonIDChain && taxonIDChain.length > 0 && (isCombination === true || rankString === 'NomenclaturalRank::Iczn::FamilyGroup::Family' || rankString === 'NomenclaturalRank::Iczn::FamilyGroup::Subfamily' || rankString === 'NomenclaturalRank::Iczn::FamilyGroup::Tribe' || rankString === 'NomenclaturalRank::Icn::FamilyGroup::Family' || rankString === 'NomenclaturalRank::Icn::FamilyGroup::Subfamily' || rankString === 'NomenclaturalRank::Icn::FamilyGroup::Tribe' || rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || rankString === 'NomenclaturalRank::Icn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species')" :ba-Prop="route.query.taxonID" :fa-Prop="familyName" :tn-Prop="taxonViewed[0].cached" :tid-prop="taxonIDChain"></biological-associations>
       </div>
@@ -112,8 +108,9 @@ h3{
     setup() {
       const state = reactive({
         showSynonyms: false,
+        showIncluded: false,
         validified: [],
-        toggleTree: "history",
+        toggleTree: true,
         isCombination: false
       })
       

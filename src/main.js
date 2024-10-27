@@ -15,6 +15,7 @@ import KeywordSearch from './components/KeywordSearch.vue';
 import TaxonomicTree from './components/TaxonomicTree.vue';
 import Images from './components/Images.vue';
 import SourcesSearch from './components/SourcesSearch.vue'
+import CalmingWheel from './components/CalmingWheel.vue';
 import './assets/main.css';
 import 'leaflet/dist/leaflet.css';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -105,6 +106,11 @@ const routes = [{
         path: '/sourcesSearch',
         name: 'SourcesSearch',
         component: SourcesSearch
+    },
+    {
+        path: '/calmingWheel',
+        name: 'CalmingWheel',
+        component: CalmingWheel
     }
 ];
 const router = createRouter({

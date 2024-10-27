@@ -30,6 +30,7 @@
   import { computed, reactive, ref, toRefs, onMounted } from 'vue'
   import api from '/api.js'
   import References from './References.vue';
+  import CalmingWheel from './CalmingWheel.vue';
 
   export default {
     name: 'BiologicalAssociations',
@@ -42,7 +43,8 @@
     },
     
     components: {
-      References
+      References,
+      CalmingWheel
     },
     
     setup(props) {

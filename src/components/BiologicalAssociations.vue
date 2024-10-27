@@ -23,7 +23,7 @@
     <references :bar-Prop="baReferences" :tn-Prop="tnProp"></references>
   </div>
   <div class="indent" v-else-if="emptyArray === true"></div>
-  <div v-else><img src="/spinning-circles.svg" alt="Loading..." width="75"></div>
+  <div v-else><img src="/bars-rotate-fade.svg" alt="Loading..."></div>
 </template>
 
 <script>
@@ -47,7 +47,7 @@
     
     setup(props) {
       const state = reactive({
-        showBiologicalAssociations: true,
+        showBiologicalAssociations: false,
         biologicalAssociationsJson: [],
         baReferences: [],
         emptyArray: false,
@@ -85,8 +85,8 @@
       });
       
       const groupedBiologicalAssociations = computed(() => {
-        if (sortedBiologicalAssociations.value.length === 0) {
-              state.emptyArray = true;
+        if (sortedBiologicalAssociations.value.length > 0) {
+          state.emptyArray = true;
         }
         const associations = sortedBiologicalAssociations.value.reduce((group, association) => {
           const groupingFamily = association.groupingFamily;

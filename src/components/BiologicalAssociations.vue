@@ -1,29 +1,33 @@
 <template>
-  <div v-if="groupedBiologicalAssociations.length">
-    <div class="row" ref="containerOfBiologicalAssociations" name="biologicalAssociationsContainer">
-      <div class="col-12 bd-highlight align-items-start" id="biologicalAssociations-list-div" ref="biologicalAssociationsList">
-        <button class="btn btn-link" type="button" @click="showBiologicalAssociations = !showBiologicalAssociations" aria-expanded="false">
-          <font-awesome-icon :icon="showBiologicalAssociations ? 'angle-down' : 'angle-right'" />
-          <span v-show="!showBiologicalAssociations"> Show biological associations</span>
-          <span v-show="showBiologicalAssociations"> Biological associations</span>
-        </button>
-        <button class="btn btn-outline-primary" id="outline-button" v-show="showBiologicalAssociations" @click="downloadJSON" title="Java Script Object Notation, well-structured format">download (JSON)</button>  <button class="btn btn-outline-primary" id="outline-button" v-show="showBiologicalAssociations" @click="downloadTSV('Biological association data')" title="Tab Separated Values, simple format">download (TSV)</button>
-        <div id="collapseBiologicalAssociations" v-show="showBiologicalAssociations">
-          <div id = "showIfQuery" v-if="groupedBiologicalAssociations">
-            <div v-for="(group, groupingFamily) in groupedBiologicalAssociations" :key="groupingFamily">
-              <h5 class="indent">{{ group[0] ? group[0] : 'Others' }}</h5>
-              <ul id="results-list-span">
-                <li id="sources-list-item" v-for="(association, index) in group[1]" :key="index" v-html="association.associationText"></li>
-              </ul>
+  <div v-if="loading === true">
+    <img src="/bars-rotate-fade.svg" alt="Loading...">
+  </div>
+  <div v-else></div>
+    <div v-if="groupedBiologicalAssociations.length">
+      <div class="row" ref="containerOfBiologicalAssociations" name="biologicalAssociationsContainer">
+        <div class="col-12 bd-highlight align-items-start" id="biologicalAssociations-list-div" ref="biologicalAssociationsList">
+          <button class="btn btn-link" type="button" @click="showBiologicalAssociations = !showBiologicalAssociations" aria-expanded="false">
+            <font-awesome-icon :icon="showBiologicalAssociations ? 'angle-down' : 'angle-right'" />
+            <span v-show="!showBiologicalAssociations"> Show biological associations</span>
+            <span v-show="showBiologicalAssociations"> Biological associations</span>
+          </button>
+          <button class="btn btn-outline-primary" id="outline-button" v-show="showBiologicalAssociations" @click="downloadJSON" title="Java Script Object Notation, well-structured format">download (JSON)</button>  <button class="btn btn-outline-primary" id="outline-button" v-show="showBiologicalAssociations" @click="downloadTSV('Biological association data')" title="Tab Separated Values, simple format">download (TSV)</button>
+          <div id="collapseBiologicalAssociations" v-show="showBiologicalAssociations">
+            <div id = "showIfQuery" v-if="groupedBiologicalAssociations">
+              <div v-for="(group, groupingFamily) in groupedBiologicalAssociations" :key="groupingFamily">
+                <h5 class="indent">{{ group[0] ? group[0] : 'Others' }}</h5>
+                <ul id="results-list-span">
+                  <li id="sources-list-item" v-for="(association, index) in group[1]" :key="index" v-html="association.associationText"></li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <references :bar-Prop="baReferences" :tn-Prop="tnProp"></references>
     </div>
-    <references :bar-Prop="baReferences" :tn-Prop="tnProp"></references>
-  </div>
-  <div class="indent" v-if="loading === false"></div>
-  <div v-else><img src="/bars-rotate-fade.svg" alt="Loading..."></div>
+    <div class="indent"></div>
+  
 </template>
 
 <script>
@@ -52,12 +56,12 @@
         showBiologicalAssociations: false,
         biologicalAssociationsJson: [],
         baReferences: [],
+        loading: true,
         arrayInJson: []
       });
       
       const jsonToDownload = ref(null);
       const familyName = ref(props.faProp);
-      const loading = ref(false);
       
       const sortedBiologicalAssociations = computed(() => {
         return state.biologicalAssociationsJson
@@ -87,9 +91,6 @@
       });
       
       const groupedBiologicalAssociations = computed(() => {
-        if (sortedBiologicalAssociations.value.length > 0) {
-          state.loading = false;
-        }
         const associations = sortedBiologicalAssociations.value.reduce((group, association) => {
           const groupingFamily = association.groupingFamily;
           if (!group.some(item => item[0] === groupingFamily)) {
@@ -153,6 +154,9 @@
         const newData = await baResponse.data;
         state.biologicalAssociationsJson = await newData;
         jsonToDownload.value["Biological association data"] = state.biologicalAssociationsJson;
+        if(await newData){
+          state.loading = false;
+        }
       });
       
       const downloadJSON = () => {
@@ -211,7 +215,6 @@
             }
           }
         }
-        state.loading = false;
         return result;
       }
       
@@ -269,8 +272,7 @@
         downloadTSV,
         jsonToDownload,
         familyName,
-        groupedBiologicalAssociations,
-        loading
+        groupedBiologicalAssociations
       };
     }
   }

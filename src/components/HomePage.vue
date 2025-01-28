@@ -41,7 +41,7 @@
       <li>Natalie Dale-Skey, The Museum of Natural History, London, United Kingdom</li>
       <li>James B. Woolley, Texas A&M University, College Station, TX, USA</li>
       <li>Vaggelis Koutsoukos, National and Kapodistrian University of Athens, Greece</li>
-      <li>Jeong Jae Yoo, Royal Ontario Museum, Canada</li>
+      <li>Jeong Jae Yoo, Royal Ontario Museum, Toronto, ON,Canada</li>
     </ul>
     
     <p>To report curation issues: <a href='https://github.com/chalcid/ucd/issues'>Curation GitHub</a></p>

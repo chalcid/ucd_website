@@ -118,7 +118,7 @@
       });
       
       const baReferences = computed(() => {
-        const references = state.biologicalAssociationsJson.flatMap(item => item.citations.flatMap(citation => citation.source.object_tag));
+        const references = state.biologicalAssociationsJson.flatMap(item => item.citations.flatMap(citation => citation.source.object_tag + " page(s): " + citation.pages));
         jsonToDownload.value["Biological association references"] = references;
         return references.sort();
       });

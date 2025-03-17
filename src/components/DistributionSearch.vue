@@ -175,79 +175,75 @@
         state.geographic_area_id = countryData.value.find(c => c.id === clickedCountry)?.id;
       };
       
-const fetchAllDistributions = async () => {
-    state.nothingClicked = false;
-    const selectedAreas = [...selectedCountries.value, ...selectedRegions.value];
+      const fetchAllDistributions = async () => {
+        state.nothingClicked = false;
+        const selectedAreas = [...selectedCountries.value, ...selectedRegions.value];
 
-    if (!selectedAreas.length) return;
+        if (!selectedAreas.length) return;
 
-    try {
-        console.log("Fetching distributions for areas:", selectedAreas);
+        try {
+            console.log("Fetching distributions for areas:", selectedAreas);
 
-        const responses = await Promise.all(
-            selectedAreas.map(area =>
-                api.get(`/asserted_distributions`, {
-                    params: {
-                        geographic_area_id: area,
-                        per: 5000,
-                        project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
+            const responses = await Promise.all(
+                selectedAreas.map(area =>
+                    api.get(`/asserted_distributions`, {
+                        params: {
+                            geographic_area_id: area,
+                            per: 5000,
+                            project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
+                        }
+                    })
+                )
+            );
+
+            console.log("Total API Responses:", responses.length);
+            console.log("Total Records Fetched:", responses.reduce((sum, res) => sum + res.data.length, 0));
+
+            const mergedResults = responses.flatMap(response => response.data);
+            const uniqueResults = Array.from(new Map(mergedResults.map(item => [item.otu.taxon_name_id, item])).values());
+
+            console.log("Unique Records After Filtering:", uniqueResults.length);
+            
+            const sortedDsList = uniqueResults.slice().sort((a, b) => 
+                a.otu.taxon_name.localeCompare(b.otu.taxon_name)
+            );
+            
+            const splitText = (formatted) => {
+                if (!formatted) return [];
+                formatted = formatted.replace(/<\/?i>/g, '');
+                const parts = formatted.split(/(\s|\[sic\])/).filter(part => part !== "");
+                return parts.map(part => {
+                    if (part === "[sic]") {
+                        return { formatted: part, shouldItalicize: false };
                     }
-                })
-            )
-        );
+                    return [{ formatted: part, shouldItalicize: true }];
+                }).flat();
+            };
+            
+            const processTaxonName = (formatted) => {
+                if (!formatted) return "";
 
-        console.log("Total API Responses:", responses.length);
-        console.log("Total Records Fetched:", responses.reduce((sum, res) => sum + res.data.length, 0));
+                formatted = formatted.replace(/<\/?i>/g, '');
+                return formatted;
+            };
 
-        const mergedResults = responses.flatMap(response => response.data);
-        const uniqueResults = Array.from(new Map(mergedResults.map(item => [item.otu.taxon_name_id, item])).values());
+            const formattedDsList = sortedDsList.map(item => ({
+                taxon_name_id: item.otu.taxon_name_id,
+                formattedName: processTaxonName(item.otu.taxon_name),
+                shouldItalicize: true
+            }));
+            
+            state.dsList = [];
+            for (let i = 0; i < formattedDsList.length; i += 100) {
+                state.dsList.push(...formattedDsList.slice(i, i + 100));
+                await new Promise(resolve => setTimeout(resolve, 20));
+            }
 
-        console.log("Unique Records After Filtering:", uniqueResults.length);
-        
-        const sortedDsList = uniqueResults.slice().sort((a, b) => 
-            a.otu.taxon_name.localeCompare(b.otu.taxon_name)
-        );
-        
-        const splitText = (formatted) => {
-            if (!formatted) return [];
-            formatted = formatted.replace(/<\/?i>/g, ''); // Remove HTML italic tags
-            const parts = formatted.split(/(\s|\[sic\])/).filter(part => part !== "");
-            return parts.map(part => {
-                if (part === "[sic]") {
-                    return { formatted: part, shouldItalicize: false };
-                }
-                return [{ formatted: part, shouldItalicize: true }];
-            }).flat();
-        };
-        
-        // 3️⃣ Function to format text (Ensures `formattedName` is a full string)
-        const processTaxonName = (formatted) => {
-            if (!formatted) return "";
-
-            formatted = formatted.replace(/<\/?i>/g, ''); // Remove HTML italic tags
-            return formatted; // ✅ Return full formatted string instead of splitting it into words
-        };
-
-        // 4️⃣ Format the sorted list
-        const formattedDsList = sortedDsList.map(item => ({
-            taxon_name_id: item.otu.taxon_name_id,
-            formattedName: processTaxonName(item.otu.taxon_name), // ✅ Full formatted string
-            shouldItalicize: true // ✅ Assume taxon names should be italicized
-        }));
-        
-        // **Batch UI updates to avoid lag**
-        state.dsList = []; // Clear the list before adding data
-        for (let i = 0; i < formattedDsList.length; i += 100) {
-            state.dsList.push(...formattedDsList.slice(i, i + 100));
-            await new Promise(resolve => setTimeout(resolve, 20)); // Prevent UI freeze
+            console.log("Data fully loaded and processed.");
+        } catch (error) {
+            console.error("Error fetching distributions:", error);
         }
-
-        console.log("Data fully loaded and processed.");
-    } catch (error) {
-        console.error("Error fetching distributions:", error);
-    }
-};
-
+      };
       
       const displayTaxonPage = (taxonClicked) => {
         state.taxonClicked = taxonClicked;

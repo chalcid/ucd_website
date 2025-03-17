@@ -211,7 +211,7 @@
           "countries": [
             { "name": "Saint Helena", "id": "22648" },
             { "name": "South Georgia", "id": "34477" },
-            { "name": "Turks and Caicos Islands", "id": "31766" }
+            { "name": "Tristan da Cunha", "id": "34116"}
           ]
       },
       {
@@ -426,6 +426,7 @@
               { "name": "Saint Lucia", "id": "189" },
               { "name": "Saint Vincent and the Grenadines", "id": "31771" },
               { "name": "Trinidad and Tobago", "id": "227" },
+              { "name": "Turks and Caicos Islands", "id": "31766" },
               { "name": "U.S. Virgin Islands", "id": "31773" }
             ]
         },

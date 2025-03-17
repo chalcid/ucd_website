@@ -11,4 +11,3 @@ I regard this as beta build.
 4. New ideas are on the way for design. I would also like to add some features as we go along.
 5. The countries list is suboptimal at the moment, since I am not aware of a way to query `geographical_areas` to build a proper search or autocomplete.
 6. A keywords search is incoming.
-7. The loading wheel stopped working at some point. I am not happy about that, but will look at it again once I get time.

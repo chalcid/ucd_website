@@ -205,57 +205,87 @@
   },
   {
     "continent": "Atlantic islands",
-      "countries": [
-        { "name": "Azores", "id": "33043" },
-        { "name": "Cabo Verde", "id": "42" },
-        { "name": "Canary Islands", "id": "32158" },
-        { "name": "Madeira", "id": "20194" },
-        { "name": "Saint Helena", "id": "22648" },
-        { "name": "South Georgia", "id": "34477" },
-        { "name": "Turks and Caicos Islands", "id": "31766" }
-      ]
+    "zones": [
+      {
+        "zone": "British",
+          "countries": [
+            { "name": "Saint Helena", "id": "22648" },
+            { "name": "South Georgia", "id": "34477" },
+            { "name": "Turks and Caicos Islands", "id": "31766" }
+          ]
+      },
+      {
+        "zone": "Independent",
+          "countries": [
+            { "name": "Cabo Verde", "id": "42" }
+          ]
+        },
+      {
+        "zone": "Portuguese",
+          "countries": [
+            { "name": "Azores", "id": "33043" },
+            { "name": "Madeira", "id": "20194" }
+          ]
+      },
+      {
+        "zone": "Spanish",
+          "countries": [
+            { "name": "Canary Islands", "id": "32158" }
+          ]
+      }
+    ]
   },
   {
     "continent": "Australia and Pacific",
-      "countries": [
-        { "name": "American Samoa", "id": "6" },
-        { "name": "Australia", "id": "15",
-          "regions": [
-            { "name": "Christmas Island", "id": "48" },
-            { "name": "Lord Howe Island", "id": "3631" },
-            { "name": "New South Wales", "id": "282" },
-            { "name": "Norfolk Island", "id": "165" },
-            { "name": "Northern Territory", "id": "288" },
-            { "name": "Queensland", "id": "379" },
-            { "name": "South Australia", "id": "299" },
-            { "name": "Tasmania", "id": "2980" },
-            { "name": "Victoria", "id": "2272" },
-            { "name": "Western Australia", "id": "307" }
+      "zones": [
+        {
+          "zone": "Australia and New Zealand",
+            "countries": [        
+              { "name": "Australia", "id": "15",
+              "regions": [
+                { "name": "Christmas Island", "id": "48" },
+                { "name": "Lord Howe Island", "id": "3631" },
+                { "name": "New South Wales", "id": "282" },
+                { "name": "Norfolk Island", "id": "165" },
+                { "name": "Northern Territory", "id": "288" },
+                { "name": "Queensland", "id": "379" },
+                { "name": "South Australia", "id": "299" },
+                { "name": "Tasmania", "id": "2980" },
+                { "name": "Victoria", "id": "2272" },
+                { "name": "Western Australia", "id": "307" }
+              ]
+            },
+            { "name": "New Zealand", "id": "160",
+              "regions": [
+                { "name": "Niue", "id": "32862" }
+              ]
+            }
           ]
         },
-        { "name": "Easter Island", "id": "34179" },
-        { "name": "Fiji", "id": "75" },
-        { "name": "French Polynesia", "id": "79" },
-        { "name": "Guam", "id": "91" },
-        { "name": "Hawaii", "id": "29939" },
-        { "name": "Kiribati", "id": "118" },
-        { "name": "Marshall Islands", "id": "140" },
-        { "name": "Midway Island", "id": "34229" },
-        { "name": "Micronesia, Federated States of", "id": "16211" },
-        { "name": "Nauru", "id": "156" },
-        { "name": "New Caledonia", "id": "159" },
-        { "name": "New Zealand", "id": "160",
-          "regions": [
-            { "name": "Niue", "id": "32862" }
-          ]
-        },
-        { "name": "Northern Mariana Islands", "id": "166" },
-        { "name": "Palau", "id": "170" },
-        { "name": "Samoa", "id": "193" },
-        { "name": "Solomon Islands", "id": "31761" },
-        { "name": "Tonga", "id": "226" },
-        { "name": "Tuvalu", "id": "232" },
-        { "name": "Vanuatu", "id": "241" }
+        {
+            "zone": "Pacific islands",
+            "countries": [  
+              { "name": "American Samoa", "id": "6" },
+              { "name": "Easter Island", "id": "34179" },
+              { "name": "Fiji", "id": "75" },
+              { "name": "French Polynesia", "id": "79" },
+              { "name": "Guam", "id": "91" },
+              { "name": "Hawaii", "id": "29939" },
+              { "name": "Kiribati", "id": "118" },
+              { "name": "Marshall Islands", "id": "140" },
+              { "name": "Midway Island", "id": "34229" },
+              { "name": "Micronesia, Federated States of", "id": "16211" },
+              { "name": "Nauru", "id": "156" },
+              { "name": "New Caledonia", "id": "159" },
+              { "name": "Northern Mariana Islands", "id": "166" },
+              { "name": "Palau", "id": "170" },
+              { "name": "Samoa", "id": "193" },
+              { "name": "Solomon Islands", "id": "31761" },
+              { "name": "Tonga", "id": "226" },
+              { "name": "Tuvalu", "id": "232" },
+              { "name": "Vanuatu", "id": "241" }
+            ]
+        }
       ]
   },
   {
@@ -444,20 +474,30 @@
   },
   {
     "continent": "South America",
-      "countries": [
-        { "name": "Argentina", "id": "12" },
-        { "name": "Bolivia", "id": "31724" },
-        { "name": "Brazil", "id": "33" },
-        { "name": "Chile", "id": "46"},
-        { "name": "Colombia", "id": "50" },
-        { "name": "Ecuador", "id": "66" },
-        { "name": "French Guiana", "id": "32253" },
-        { "name": "Guyana", "id": "96" },
-        { "name": "Paraguay", "id": "174" },
-        { "name": "Peru", "id": "175" },
-        { "name": "Suriname", "id": "213" },
-        { "name": "Uruguay", "id": "239" },
-        { "name": "Venezuela", "id": "26375" }
-      ]
+    "zones": [
+      {
+        "zone": "Northern",
+          "countries": [
+            { "name": "Bolivia", "id": "31724" },
+            { "name": "Brazil", "id": "33" },
+            { "name": "Colombia", "id": "50" },
+            { "name": "Ecuador", "id": "66" },
+            { "name": "French Guiana", "id": "32253" },
+            { "name": "Guyana", "id": "96" },
+            { "name": "Peru", "id": "175" },
+            { "name": "Suriname", "id": "213" },
+            { "name": "Venezuela", "id": "26375" }
+        ]
+      },
+      {
+        "zone": "Southern",
+          "countries": [
+            { "name": "Argentina", "id": "12" },
+            { "name": "Chile", "id": "46"},
+            { "name": "Paraguay", "id": "174" },
+            { "name": "Uruguay", "id": "239" }
+          ]
+      }
+    ]
   }
 ]

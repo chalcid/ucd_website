@@ -45,8 +45,8 @@
         <div class="col-12 bd-highlight align-items-start" ref="resultsList">
           <div id="collapseSynonyms" v-show="showSynonyms">
             <div id="showIfQuery" v-if="resultsExist">
-              <ul v-if="synonymArray" id="results-list-span">
-                <li id="results-list-item" v-for="tag in synonymArray.timeline" :key="tag" v-html="tag.label"></li>
+              <ul v-if="concatenatedSynonyms" id="results-list-span">
+                <li id="results-list-item" v-for="tag in concatenatedSynonyms" :key="tag" v-html="tag"></li>
               </ul>
               <div class="indent" v-show="rankString==='NomenclaturalRank::Iczn::SpeciesGroup::Species' || isCombination === true">{{ concatenatedTypeInfo }}</div>
               <div class="indent" v-show="rankString==='NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString==='NomenclaturalRank::Iczn::GenusGroup::Subgenus'">Type species: <router-link :to="{ name: 'TaxonPage', query: { taxonID: typeID }}" v-if="typeID"> <span v-html="concatenatedTypeInfo"></span></router-link></div>
@@ -122,6 +122,7 @@ h3{
       const taxonViewed = ref([]);
       const reversedBreadcrumbs = ref([]);
       const synonymArray = ref([]);
+      const concatenatedSynonyms = ref([]);
       const isTaxonIDChainPopulated = ref(false);
       const taxonIDChain =  ref([]);
       const jsonToDownload = ref(null);
@@ -314,7 +315,14 @@ h3{
             project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
         }});
 
-        synonymArray.value = synonymResponse.data
+        synonymArray.value = synonymResponse.data;
+        concatenatedSynonyms.value = synonymArray.value.timeline.map(tag => {
+          let html = tag.label || '';
+          if (tag.type_label && tag.type_label.trim() !== '') {
+            html += ` <strong>Type label:</strong> ${tag.type_label}`;
+          }
+          return html;
+        });
       };
       
       const typeInfo = async () => {
@@ -329,7 +337,7 @@ h3{
             jsonToDownload.value["Additional data"] = await newOtuTypeLabel;
             const extractedTypeInfo = await newOtuTypeLabel.type_materials_catalog_labels[0];
             if(extractedTypeInfo){
-              concatenatedTypeInfo.value = "Type information: " + await extractedTypeInfo.type_type + ', Label: ' + extractedTypeInfo.label;
+              concatenatedTypeInfo.value = "Type information: " + await extractedTypeInfo.type_type + ', Label: ' + extractedTypeInfo.label + '.'
             };
           };
           
@@ -483,6 +491,7 @@ h3{
         makeSynonyms,
         reversedBreadcrumbs,
         synonymArray,
+        concatenatedSynonyms,
         isTaxonIDChainPopulated,
         taxonIDChain,
         jsonToDownload,

@@ -9,10 +9,10 @@
       </button>
       <a @click="displayTaxonPage(firstDown.id)" id="higherTaxon">
         <span v-if="firstDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || firstDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || firstDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Subgenus'">
-          <i>{{ firstDown.name }}</i>
+          <i>{{ firstDown.name }}</i> <span v-show="firstDown.cached_author_year"> {{" " + firstDown.cached_author_year }} </span>
         </span>
         <span v-else>
-          {{ firstDown.name }}
+          {{ firstDown.name + " " + firstDown.cached_author_year }}
         </span>
       </a>
       <ul v-show="openTaxa[firstDown.id] === true && firstDown.children">
@@ -23,10 +23,10 @@
           </button>
           <a @click="displayTaxonPage(secondDown.id), nothingClicked = !nothingClicked" class="normal-links" id="higherTaxon">
             <span v-if="secondDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || secondDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || firstDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Subgenus'">
-              <i>{{ secondDown.name }}</i>
+              <i>{{ secondDown.name }}</i> <span v-show="secondDown.cached_author_year">{{" " + secondDown.cached_author_year }}</span>
             </span>
             <span v-else>
-              {{ secondDown.name }}
+              {{ secondDown.name + " " + secondDown.cached_author_year }}
             </span>
           </a>
           <ul v-show="openTaxa[secondDown.id] === true && secondDown.children">
@@ -37,10 +37,10 @@
               </button>
               <a @click="displayTaxonPage(thirdDown.id), nothingClicked = !nothingClicked" class="normal-links" id="higherTaxon">
                 <span v-if="thirdDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || thirdDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || firstDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Subgenus'">
-                  <i> {{ thirdDown.name }} </i>
+                  <i> {{ thirdDown.name }} </i> <span v-show="thirdDown.cached_author_year"> {{" " + thirdDown.cached_author_year }} </span>
                 </span>
                 <span v-else>
-                  {{ thirdDown.name }}
+                  {{ thirdDown.name + " " + thirdDown.cached_author_year }}
                 </span>
               </a>
               <ul v-show="openTaxa[thirdDown.id] === true && thirdDown.children">
@@ -51,20 +51,20 @@
                   </button>
                   <a @click="displayTaxonPage(fourthDown.id), nothingClicked = !nothingClicked" id="species">
                     <span v-if="fourthDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || fourthDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || firstDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Subgenus'">
-                      <i> {{ fourthDown.name }} </i>
+                      <i> {{ fourthDown.name }} </i> <span v-show="fourthDown.cached_author_year">{{" " + fourthDown.cached_author_year }} </span>
                     </span>
                     <span v-else>
-                      {{ fourthDown.name }}
+                      {{ fourthDown.name + " " + fourthDown.cached_author_year }}
                     </span>
                   </a>
                   <ul v-show="openTaxa[fourthDown.id] === true && fourthDown.children">
                     <li v-for="fifthDown in fourthDown.children" :key="fifthDown.id">
                       <a @click="displayTaxonPage(fifthDown.id), nothingClicked = !nothingClicked" id="species" class="padding-left-twenty">
                         <span v-if="fifthDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || fifthDown.rank_string === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || firstDown.rank_string === 'NomenclaturalRank::Iczn::GenusGroup::Subgenus'">
-                          <i> {{ fifthDown.name }} </i>
+                          <i> {{ fifthDown.name }} </i> <span v-show="fifthDown.cached_author_year">{{" " + fifthDown.cached_author_year }} </span>
                         </span>
                         <span v-else>
-                          {{ fifthDown.name }}
+                          {{ fifthDown.name + " " + fifthDown.cached_author_year}}
                         </span>
                       </a>
                     </li>

@@ -48,7 +48,31 @@
       });
       
       const adReferences = computed(() => {
-        let references = taxonDistributionsJson.value.flatMap(item => item.citations.flatMap(citation => citation.source.name + " Citation page(s): " + citation.pages));
+        const citationMap = new Map();
+
+        taxonDistributionsJson.value.forEach(item => {
+          const areaName = item.geographic_area?.name || 'Unknown area';
+
+          item.citations.forEach(citation => {
+            const key = `${citation.source.global_id}::${citation.pages}`;
+
+            if (!citationMap.has(key)) {
+              citationMap.set(key, {
+                sourceName: citation.source.name,
+                pages: citation.pages,
+                areas: new Set([areaName])
+              });
+            } else {
+              citationMap.get(key).areas.add(areaName);
+            }
+          });
+        });
+
+        const references = Array.from(citationMap.values()).map(({ sourceName, pages, areas }) => {
+          const areaList = Array.from(areas).sort().join(', ');
+          return `${sourceName} Citation page(s): ${pages}. Reported area(s): ${areaList}`;
+        });
+
         return references.sort();
       });
       

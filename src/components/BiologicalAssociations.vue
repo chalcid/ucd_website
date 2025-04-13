@@ -91,30 +91,37 @@
       });
       
       const groupedBiologicalAssociations = computed(() => {
-        const associations = sortedBiologicalAssociations.value.reduce((group, association) => {
-          const groupingFamily = association.groupingFamily;
-          if (!group.some(item => item[0] === groupingFamily)) {
-            group.push([groupingFamily, []]);
+        const groupMap = new Map();
+
+        for (const association of sortedBiologicalAssociations.value) {
+          const family = association.groupingFamily || 'Other';
+
+          if (!groupMap.has(family)) {
+            groupMap.set(family, []);
           }
-          group.find(item => item[0] === groupingFamily)[1].push(association);
-          
-          for (let i = 0; i < group.length; i++) {
-            group[i][1].sort((a, b) => {
-              return a.objectName.localeCompare(b.objectName);
-            });
-          }
-          
-          return group;
-        }, []);
-        
-        associations.sort(([familyA,], [familyB,]) => {
-          if (!familyA && !familyB) return 0;
-          if (!familyA) return 1;
-          if (!familyB) return -1;
-          return familyA.localeCompare(familyB);
+          groupMap.get(family).push(association);
+        }
+
+        const groupedArray = Array.from(groupMap.entries()).map(([family, items]) => {
+          items.sort((a, b) => a.objectName.localeCompare(b.objectName));
+          return [family, items];
         });
-        
-        return associations;
+
+        groupedArray.sort(([famA], [famB]) => {
+          const getRank = (family) => {
+            if (family === 'Other') return 1;
+            if (family?.endsWith('dae')) return 0;
+            return 2;
+          };
+
+          const rankA = getRank(famA);
+          const rankB = getRank(famB);
+
+          if (rankA !== rankB) return rankA - rankB;
+          return famA.localeCompare(famB);
+        });
+
+        return groupedArray;
       });
       
       const baReferences = computed(() => {

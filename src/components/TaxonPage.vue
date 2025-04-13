@@ -319,7 +319,7 @@ h3{
         concatenatedSynonyms.value = synonymArray.value.timeline.map(tag => {
           let html = tag.label || '';
           if (tag.type_label && tag.type_label.trim() !== '') {
-            html += ` <strong>Type label:</strong> ${tag.type_label}`;
+            html += ` <strong>Type info:</strong> ${tag.type_label}`;
           }
           return html;
         });

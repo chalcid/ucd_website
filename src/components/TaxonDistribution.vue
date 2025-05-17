@@ -41,7 +41,7 @@
 
       const sortedTaxonDistributions = computed(() => {
         const uniqueCountries = new Set(
-          taxonDistributionsJson.value.map(item => item.geographic_area.name)
+          taxonDistributionsJson.value.map(item => item.asserted_distribution_shape.name)
         );
 
         return Array.from(uniqueCountries).sort();

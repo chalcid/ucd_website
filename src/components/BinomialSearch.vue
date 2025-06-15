@@ -4,7 +4,7 @@
       <legend>Search Mode</legend>
       <div>
         <input type="radio" id="autocomplete-search" value="autocomplete" v-model="searchMode" />
-        <label class="padding-left-and-right" for="autocomplete-search">Autocomplete search (wait for results to appear)</label>
+        <label class="padding-left-and-right" for="autocomplete-search">Autocomplete search (wait for results to appear, <strong><em>Prefer results with the checkmark (not [c]) if looking for valid names!</em>)</strong></label>
       </div>
       <div>
         <input type="radio" id="regular-search" value="regular" v-model="searchMode" />
@@ -79,7 +79,7 @@
         try {
           const response = await api.get(`/otus/autocomplete`, 
             {params: {
-              having_taxon_name_only: 'true',
+              //having_taxon_name_only: 'true',
               project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
               term: state.searchTerm
             }})

@@ -21,6 +21,9 @@
             <li class="nav-item">
               <router-link :to ="{name: 'SourcesSearch'} " class="nav-link">Search references</router-link>
             </li>
+            <li class="nav-item">
+              <router-link :to ="{name: 'KeywordSearch'} " class="nav-link">Search with keywords</router-link>
+            </li>
         </ul>
     </div>
 </template>

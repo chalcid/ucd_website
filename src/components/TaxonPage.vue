@@ -202,6 +202,7 @@ h3{
                 extend: ["otus"],
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
             }})
+            console.log("Debug: taxon found.")
             state.validified = await otuGet.data;
             otu.value = await state.validified.otus[0].id.toString();
             validTaxonID.value = await state.validified.cached_valid_taxon_name_id;
@@ -235,6 +236,7 @@ h3{
             try {
               otu.value = await state.validified.otus[0].id.toString();
               validTaxonID.value = await state.validified.id;
+              console.log("Debug: taxon found, second appear")
             } catch (error) {
               console.log("Error retrieving this taxon. Does it exist in the database?")
             }

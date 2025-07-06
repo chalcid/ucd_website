@@ -134,6 +134,9 @@
             const [tdResponse, cachedMapResponse] = await combinedDistributionPromise;
             taxonDistributionsJson.value = tdResponse.data;
             taxonMap.value = cachedMapResponse.data.cached_map.geo_json;
+          }
+          else{
+            console.log("Debug: there are no otu IDs.")
           };
           
           if (taxonMap.value.length === 0) {

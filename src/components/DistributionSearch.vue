@@ -188,7 +188,9 @@
                 selectedAreas.map(area =>
                     api.get(`/asserted_distributions`, {
                         params: {
-                            geographic_area_id: area,
+                            geo_shape_type: 'GeographicArea',
+                            geo_shape_id: area,
+                            geo_mode: 'false',
                             per: 5000,
                             project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
                         }

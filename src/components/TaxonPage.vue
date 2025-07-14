@@ -68,6 +68,7 @@
       <div v-if="isTaxonIDChainPopulated">
         <biological-associations v-if="taxonIDChain && taxonIDChain.length > 0 && (isCombination === true || rankString === 'NomenclaturalRank::Iczn::FamilyGroup::Family' || rankString === 'NomenclaturalRank::Iczn::FamilyGroup::Subfamily' || rankString === 'NomenclaturalRank::Iczn::FamilyGroup::Tribe' || rankString === 'NomenclaturalRank::Icn::FamilyGroup::Family' || rankString === 'NomenclaturalRank::Icn::FamilyGroup::Subfamily' || rankString === 'NomenclaturalRank::Icn::FamilyGroup::Tribe' || rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || rankString === 'NomenclaturalRank::Icn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species')" :ba-Prop="route.query.taxonID" :fa-Prop="familyName" :tn-Prop="taxonViewed[0].cached" :tid-prop="taxonIDChain"></biological-associations>
       </div>
+      <keyword-search v-if="taxonIDChain && taxonIDChain.length > 0 && (isCombination === true || rankString === 'NomenclaturalRank::Iczn::FamilyGroup::Family' || rankString === 'NomenclaturalRank::Iczn::FamilyGroup::Subfamily' || rankString === 'NomenclaturalRank::Iczn::FamilyGroup::Tribe' || rankString === 'NomenclaturalRank::Icn::FamilyGroup::Family' || rankString === 'NomenclaturalRank::Icn::FamilyGroup::Subfamily' || rankString === 'NomenclaturalRank::Icn::FamilyGroup::Tribe' || rankString === 'NomenclaturalRank::Iczn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Iczn::SpeciesGroup::Species' || rankString === 'NomenclaturalRank::Icn::GenusGroup::Genus' || rankString === 'NomenclaturalRank::Icn::SpeciesAndInfraspeciesGroup::Species')" :ks-Prop="otu" :tn-Prop="taxonViewed[0].cached"></keyword-search>
     </div>
     
     <div v-show="isTaxonIDChainPopulated" class="col-md-4" id="movingDiv">
@@ -92,6 +93,7 @@ h3{
   import TaxonDistribution from "./TaxonDistribution.vue";
   import TaxonomicTree from './TaxonomicTree.vue';
   import Images from './Images.vue';
+  import KeywordSearch from './KeywordSearch.vue';
   import { useRoute } from 'vue-router';
   
   export default {
@@ -102,7 +104,8 @@ h3{
       References,
       TaxonDistribution,
       TaxonomicTree,
-      Images
+      Images,
+      KeywordSearch
     },
     
     setup() {
@@ -202,7 +205,7 @@ h3{
                 extend: ["otus"],
                 project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
             }})
-            console.log("Debug: taxon found.")
+            //console.log("Debug: taxon found.")
             state.validified = await otuGet.data;
             otu.value = await state.validified.otus[0].id.toString();
             validTaxonID.value = await state.validified.cached_valid_taxon_name_id;
@@ -236,7 +239,7 @@ h3{
             try {
               otu.value = await state.validified.otus[0].id.toString();
               validTaxonID.value = await state.validified.id;
-              console.log("Debug: taxon found, second appear")
+              //console.log("Debug: taxon found, second appear")
             } catch (error) {
               console.log("Error retrieving this taxon. Does it exist in the database?")
             }

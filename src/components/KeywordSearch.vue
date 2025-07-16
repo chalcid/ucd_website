@@ -72,7 +72,8 @@
           extend: ['topic','citation_topics','source','bibtex'],
           project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
         }})
-      citations.value = response.data
+      citations.value = response.data;
+      citations.value = citations.value.filter(x => x.citation_topics?.some(ct => ct.topic?.id === selectedTopicId.value));
     } catch (error) {
       console.error('Failed to fetch citations:', error)
       citations.value = []

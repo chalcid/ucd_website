@@ -51,7 +51,7 @@
         const citationMap = new Map();
 
         taxonDistributionsJson.value.forEach(item => {
-          const areaName = item.geographic_area?.name || 'Unknown area';
+          const areaName = item.asserted_distribution_shape?.name || 'Unknown area';
 
           item.citations.forEach(citation => {
             const key = `${citation.source.global_id}::${citation.pages}`;
@@ -69,6 +69,7 @@
         });
 
         const references = Array.from(citationMap.values()).map(({ sourceName, pages, areas }) => {
+          console.log("citationMap:", citationMap);
           const areaList = Array.from(areas).sort().join(', ');
           return `${sourceName} Citation page(s): ${pages}. Reported area(s): ${areaList}`;
         });

@@ -69,7 +69,6 @@
         });
 
         const references = Array.from(citationMap.values()).map(({ sourceName, pages, areas }) => {
-          console.log("citationMap:", citationMap);
           const areaList = Array.from(areas).sort().join(', ');
           return `${sourceName} Citation page(s): ${pages}. Reported area(s): ${areaList}`;
         });

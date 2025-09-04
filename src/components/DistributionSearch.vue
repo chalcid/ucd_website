@@ -202,12 +202,13 @@
             console.log("Total Records Fetched:", responses.reduce((sum, res) => sum + res.data.length, 0));
 
             const mergedResults = responses.flatMap(response => response.data);
-            const uniqueResults = Array.from(new Map(mergedResults.map(item => [item.otu.taxon_name_id, item])).values());
+            const uniqueResults = Array.from(new Map(mergedResults.map(item => [item.asserted_distribution_object.taxon_name_id, item])).values());
+            console.log("unique_results", uniqueResults);
 
             console.log("Unique Records After Filtering:", uniqueResults.length);
             
             const sortedDsList = uniqueResults.slice().sort((a, b) => 
-                a.otu.taxon_name.localeCompare(b.otu.taxon_name)
+                a.asserted_distribution_object.taxon_name.localeCompare(b.asserted_distribution_object.taxon_name)
             );
             
             const splitText = (formatted) => {
@@ -230,8 +231,8 @@
             };
 
             const formattedDsList = sortedDsList.map(item => ({
-                taxon_name_id: item.otu.taxon_name_id,
-                formattedName: processTaxonName(item.otu.taxon_name),
+                taxon_name_id: item.asserted_distribution_object.taxon_name_id,
+                formattedName: processTaxonName(item.asserted_distribution_object.taxon_name),
                 shouldItalicize: true
             }));
             

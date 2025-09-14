@@ -109,6 +109,10 @@
         taxonSelected.value = id ?? ''
       }
       
+      watch(taxonSelected, (val) => {
+        fetchAllDistributions();
+      })
+      
       const headerName = computed(() => {
         if (!countryData.value.length) return "No selection";
 

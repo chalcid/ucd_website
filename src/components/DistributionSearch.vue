@@ -1,4 +1,9 @@
 <template>
+  <p><strong>Filter by taxon name:</strong></p>
+  <BinomialFilter :key="resetKey" @taxon-selected="onTaxonSelected" />
+  <button @click="resetTaxa()">Reset taxon filter</button>  <button @click="nothingClicked = true">Go back to area list</button>
+  <br><br>
+
   <div v-if="countryData.length > 0">
     <ul class="ul-home-page" v-if="nothingClicked">
       <li><i>Note: be prepared to wait a few seconds if you choose a region with many records.</i></li>
@@ -65,12 +70,17 @@
 </template>
 
 <script>
-  import { onMounted, reactive, toRefs, ref, computed } from 'vue';
+  import { onMounted, reactive, toRefs, ref, computed, watch } from 'vue';
   import api from '/api.js'
   import { useRouter } from 'vue-router'
+  import BinomialFilter from './BinomialFilter.vue';
   
   export default {
     name: 'DistributionSearch',
+    
+    components: {
+      BinomialFilter
+    },
     
     setup(props) {
       const state = reactive({
@@ -90,6 +100,14 @@
       const openCountries = reactive({});
       const selectedCountries = ref([]);
       const selectedRegions = ref([]);
+      const taxonSelected = ref('');
+      const binomialRef = ref(null);
+      const resetKey = ref(0);
+      const resetAreas = ref(0);
+      
+      const onTaxonSelected = ({ id }) => {
+        taxonSelected.value = id ?? ''
+      }
       
       const headerName = computed(() => {
         if (!countryData.value.length) return "No selection";
@@ -178,11 +196,16 @@
       const fetchAllDistributions = async () => {
         state.nothingClicked = false;
         const selectedAreas = [...selectedCountries.value, ...selectedRegions.value];
+        
+        if(selectedAreas.length < 1){
+          state.nothingClicked = true;
+          return;
+        }
 
         if (!selectedAreas.length) return;
 
         try {
-            console.log("Fetching distributions for areas:", selectedAreas);
+            //console.log("Fetching distributions for areas:", selectedAreas);
 
             const responses = await Promise.all(
                 selectedAreas.map(area =>
@@ -191,6 +214,9 @@
                             geo_shape_type: 'GeographicArea',
                             geo_shape_id: area,
                             geo_mode: 'false',
+                            taxon_name_id: (taxonSelected.value && String(taxonSelected.value).length > 0) ? taxonSelected.value : undefined,
+                            descendants: true,
+                            extend: ["asserted_distribution_shape","asserted_distribution_object"],
                             per: 5000,
                             project_token: import.meta.env.VITE_APP_PROJECT_TOKEN
                         }
@@ -198,30 +224,18 @@
                 )
             );
 
-            console.log("Total API Responses:", responses.length);
-            console.log("Total Records Fetched:", responses.reduce((sum, res) => sum + res.data.length, 0));
+            //console.log("Total API Responses:", responses.length);
+            //console.log("Total Records Fetched:", responses.reduce((sum, res) => sum + res.data.length, 0));
 
             const mergedResults = responses.flatMap(response => response.data);
             const uniqueResults = Array.from(new Map(mergedResults.map(item => [item.asserted_distribution_object.taxon_name_id, item])).values());
-            console.log("unique_results", uniqueResults);
+            //console.log("unique_results", uniqueResults);
 
-            console.log("Unique Records After Filtering:", uniqueResults.length);
+            //console.log("Unique Records After Filtering:", uniqueResults.length);
             
             const sortedDsList = uniqueResults.slice().sort((a, b) => 
                 a.asserted_distribution_object.taxon_name.localeCompare(b.asserted_distribution_object.taxon_name)
             );
-            
-            const splitText = (formatted) => {
-                if (!formatted) return [];
-                formatted = formatted.replace(/<\/?i>/g, '');
-                const parts = formatted.split(/(\s|\[sic\])/).filter(part => part !== "");
-                return parts.map(part => {
-                    if (part === "[sic]") {
-                        return { formatted: part, shouldItalicize: false };
-                    }
-                    return [{ formatted: part, shouldItalicize: true }];
-                }).flat();
-            };
             
             const processTaxonName = (formatted) => {
                 if (!formatted) return "";
@@ -242,7 +256,7 @@
                 await new Promise(resolve => setTimeout(resolve, 20));
             }
 
-            console.log("Data fully loaded and processed.");
+            //console.log("Data fully loaded and processed.");
         } catch (error) {
             console.error("Error fetching distributions:", error);
         }
@@ -257,8 +271,14 @@
       const resetCountryResult = () => {
         state.nothingClicked = !state.nothingClicked;
         state.countryResult = [];
-      };  
-  
+        state.selectedCountries = [];
+      };
+      
+      const resetTaxa= () => {
+        resetKey.value++;
+        taxonSelected.value = '';
+      };
+      
       return { 
         ...toRefs(state),
         fetchAllDistributions,
@@ -279,7 +299,13 @@
         resetCountryResult,
         selectedCountries,
         selectedRegions,
-        headerName
+        taxonSelected,
+        binomialRef,
+        headerName,
+        onTaxonSelected,
+        resetKey,
+        resetTaxa,
+        resetAreas
       };
     }
   };

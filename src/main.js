@@ -3,6 +3,7 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import App from './App.vue';
 import Everything from './components/Everything.vue';
 import HomePage from './components/HomePage.vue';
+import BinomialFilter from './components/BinomialFilter.vue';
 import BinomialSearch from './components/BinomialSearch.vue';
 import TaxonPage from './components/TaxonPage.vue';
 import SearchResults from './components/SearchResults.vue';
@@ -35,6 +36,12 @@ const routes = [{
         name: 'Home',
         meta: {title: 'UCD: Home Page'},
         component: HomePage
+    },
+    {
+        path: '/binomialFilter',
+        name: 'BinomialFilter',
+        meta: {title: 'UCD: Binomial Filter'},
+        component: BinomialFilter
     },
     {
         path: '/binomialSearch',

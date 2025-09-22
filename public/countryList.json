@@ -446,6 +446,7 @@
         {
           "zone": "Northern America",
             "countries": [
+              { "name": "Alaska", "id": "33470" },
               { "name": "Canada", "id": "41",
                 "regions": [
                   { "name": "Alberta", "id": "31938" },
@@ -464,10 +465,9 @@
                 ]
               },
               { "name": "Greenland", "id": "88" },
-              { "name": "United States", "id": "237",
+              { "zone": "contiguous United States", "id": "237",
               "regions": [
                 { "name": "Alabama", "id": "33455" },
-                { "name": "Alaska", "id": "33470" },
                 { "name": "Arizona", "id": "33424" },
                 { "name": "Arkansas", "id": "33432" },
                 { "name": "California", "id": "33425" },

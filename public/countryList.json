@@ -465,7 +465,7 @@
                 ]
               },
               { "name": "Greenland", "id": "88" },
-              { "zone": "contiguous United States", "id": "237",
+              { "zone": "contiguous United States",
               "regions": [
                 { "name": "Alabama", "id": "33455" },
                 { "name": "Arizona", "id": "33424" },

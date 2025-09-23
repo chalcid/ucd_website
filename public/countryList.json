@@ -465,9 +465,12 @@
                 ]
               },
               { "name": "Greenland", "id": "88" },
-              { "zone": "United States",
-               "countries":[
-                 {"name": "lower 48 contiguous states",
+            ]
+        },
+        {
+          "zone": "United States",
+            "countries":[
+              {"name": "lower 48 contiguous states",
                 "regions": [
                   { "name": "Alabama", "id": "33455" },
                   { "name": "Arizona", "id": "33424" },
@@ -520,10 +523,8 @@
                 ]
               }
             ]
-          }
-        ]
-      }
-    ]
+        }
+      ]
   },
   {
     "continent": "South America",

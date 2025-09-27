@@ -77,7 +77,7 @@
              
       const fetchAutocompleteResults = async () => {
         try {
-          const response = await api.get(`/otus/autocomplete`, 
+          const response = await api.get(`/taxon_names/autocomplete`, 
             {params: {
               //having_taxon_name_only: 'true',
               project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
@@ -177,7 +177,7 @@
       const displayAutocompleteTaxonPage = (result) => {
         const parser = new DOMParser();
         const html = parser.parseFromString(result.label_html, 'text/html');
-        const title = html.querySelector('span.otu_tag_taxon_name').title;
+        const title = result.valid_taxon_name_id;
         router.push({ name: 'TaxonPage', query: { taxonID: title }});
         state.show = !state.show;
       }

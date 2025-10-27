@@ -342,7 +342,9 @@ h3{
             jsonToDownload.value["Additional data"] = await newOtuTypeLabel;
             const extractedTypeInfo = await newOtuTypeLabel.type_materials_catalog_labels[0];
             if(extractedTypeInfo){
-              concatenatedTypeInfo.value = "Type information: " + await extractedTypeInfo.type_type + ', Label: ' + extractedTypeInfo.label + '.'
+              concatenatedTypeInfo.value = "Type information: " + await extractedTypeInfo.type_type + ', Label: ' + extractedTypeInfo.label.replace(
+  /\b([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\b/gi,
+  "Darwin Core universal identifier: $1")
             };
           };
           

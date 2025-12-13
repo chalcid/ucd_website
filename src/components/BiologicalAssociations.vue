@@ -81,9 +81,20 @@
               association.object.taxonomy.family !== familyName.value ? association.object.taxonomy.family :
               association.subject.taxonomy.family !== familyName.value ? association.subject.taxonomy.family :
               familyName.value;
+            const notesRaw = association.notes;
+            let arr = [];
+            let notes = '';
+              if (Array.isArray(notesRaw)) {
+                arr = notesRaw
+                .map(n => (n && typeof n === 'object') ? n.text : null)
+                .filter(t => typeof t === 'string')
+                .map(t => t.trim())
+                .filter(Boolean);
+              };
+              notes = arr.length > 0 ? `Notes: ${arr}`.replace(" _", " <i>").replace("_ ", "</i> ") : ``
               
             return {
-              associationText: `${objectTag} is a ${relationship} of ${subject}, (${citation})`.replace("a associate", "an associate"),
+              associationText: `${objectTag} is a ${relationship} of ${subject}, (${citation}). ${notes}`.replace("a associate", "an associate"),
               groupingFamily: groupingFamily,
               objectName: object
             }
@@ -151,7 +162,7 @@
         //  baResponse = await api.get(`/biological_associations`,
             {params: {
               taxon_name_id: props.tidProp,
-              extend: ["object", "subject", "biological_relationship", "taxonomy", "biological_relationship_types", "citations", "source"],
+              extend: ["object", "subject", "biological_relationship", "taxonomy", "biological_relationship_types", "citations", "source","notes"],
               per: "10000",
               descendants: "true",
               project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,

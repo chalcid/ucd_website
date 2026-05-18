@@ -147,27 +147,38 @@
           "Biological association references": []
         };
         
-        var baResponse = await api.get(`/biological_associations`,
-        //  {params: {
-        //    taxon_name_id: props.baProp,
-        //    extend: ["object", "subject", "biological_relationship", "taxonomy", "biological_relationship_types", "citations", "source"],
-        //    per: "10000",
-        //    descendants: "true",
-        //    project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
-        //  }}
-        //);
-        //if(!baResponse.data[0]){
-        //  console.log("baResponse.data.length = " & baResponse.data.length);
-        //  baResponse = [];
-        //  baResponse = await api.get(`/biological_associations`,
-            {params: {
-              taxon_name_id: props.tidProp,
-              extend: ["object", "subject", "biological_relationship", "taxonomy", "biological_relationship_types", "citations", "source","notes"],
-              per: "10000",
-              descendants: "true",
-              project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
-            }}
+        const taxonNameIds = Array.isArray(props.tidProp)
+          ? props.tidProp.map(item => typeof item === "object" ? item.id : item)
+          : [typeof props.tidProp === "object" ? props.tidProp?.id : props.tidProp];
+
+        const cleanTaxonNameIds = taxonNameIds
+          .filter(id => id != null && id !== "")
+          .map(id => Number(id))
+          .filter(Number.isInteger);
+        
+        if (cleanTaxonNameIds.length > 0) {
+          var baResponse = await api.get(`/biological_associations`,
+          //  {params: {
+          //    taxon_name_id: props.baProp,
+          //    extend: ["object", "subject", "biological_relationship", "taxonomy", "biological_relationship_types", "citations", "source"],
+          //    per: "10000",
+          //    descendants: "true",
+          //    project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
+          //  }}
+          //);
+          //if(!baResponse.data[0]){
+          //  console.log("baResponse.data.length = " & baResponse.data.length);
+          //  baResponse = [];
+          //  baResponse = await api.get(`/biological_associations`,
+              {params: {
+                taxon_name_id: cleanTaxonNameIds,
+                extend: ["object", "subject", "biological_relationship", "taxonomy", "biological_relationship_types", "citations", "source","notes"],
+                per: "10000",
+                descendants: "true",
+                project_token: import.meta.env.VITE_APP_PROJECT_TOKEN,
+              }}
           );
+        };
         const newData = await baResponse.data;
         state.biologicalAssociationsJson = await newData;
         jsonToDownload.value["Biological association data"] = state.biologicalAssociationsJson;

@@ -42,7 +42,7 @@
       <li>James B. Woolley, Texas A&M University, College Station, TX, USA</li>
       <li>Vaggelis Koutsoukos, National and Kapodistrian University of Athens, Greece</li>
       <li>Jeong Jae Yoo, Royal Ontario Museum, Toronto, ON, Canada</li>
-      <li>Robert Kresslein</li>
+      <li>Robert Kresslein, USDA Systematic Entomology Laboratory, Washington, DC, USA</li>
     </ul>
     
     <p>To report curation issues: <a href='https://github.com/chalcid/ucd/issues'>Curation GitHub</a></p>
